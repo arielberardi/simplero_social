@@ -1,9 +1,10 @@
 class PostsController < ApplicationController
+  before_action :set_group
   before_action :set_post, only: %i[show edit update destroy]
 
   # GET /posts or /posts.json
   def index
-    @posts = Post.all
+    @posts = @group.posts.all
   end
 
   # GET /posts/1
@@ -12,7 +13,7 @@ class PostsController < ApplicationController
 
   # GET /posts/new
   def new
-    @post = Post.new
+    @post = @group.posts.new
   end
 
   # GET /posts/1/edit
@@ -21,10 +22,10 @@ class PostsController < ApplicationController
 
   # POST /posts
   def create
-    @post = Post.new(post_params)
+    @post = @group.posts.new(post_params)
 
     if @post.save
-      redirect_to post_url(@post), notice: 'Post was successfully created.'
+      redirect_to group_post_url(@group, @post), notice: 'Post was successfully created.'
     else
       render :new, status: :unprocessable_entity
     end
@@ -33,7 +34,7 @@ class PostsController < ApplicationController
   # PATCH/PUT /posts/1
   def update
     if @post.update(post_params)
-      redirect_to post_url(@post), notice: 'Post was successfully updated.'
+      redirect_to group_post_url(@group, @post), notice: 'Post was successfully updated.'
     else
       render :edit, status: :unprocessable_entity
     end
@@ -43,13 +44,17 @@ class PostsController < ApplicationController
   def destroy
     @post.destroy
 
-    redirect_to posts_url, notice: 'Post was successfully destroyed.'
+    redirect_to group_posts_url, notice: 'Post was successfully destroyed.'
   end
 
   private
 
+  def set_group
+    @group = Group.find(params[:group_id])
+  end
+
   def set_post
-    @post = Post.find(params[:id])
+    @post = @group.posts.find(params[:id])
   end
 
   def post_params
