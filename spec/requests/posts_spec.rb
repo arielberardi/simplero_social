@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe '/posts', type: :request do
-  let(:mock_post) { Post.create!(valid_attributes) }
+  let(:mock_post) { FactoryBot.create(:post) }
   let(:valid_attributes) { attributes_for(:post) }
   let(:invalid_attributes) { attributes_for(:post, title: '') }
 
