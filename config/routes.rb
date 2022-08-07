@@ -1,6 +1,11 @@
 Rails.application.routes.draw do
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  resources :groups do
+    resources :posts, except: %i[new edit]
+  end
 
-  # Defines the root path route ("/")
-  # root "articles#index"
+  resources :posts do
+    resources :comments, only: %i[create update destroy]
+  end
+
+  root 'groups#index'
 end

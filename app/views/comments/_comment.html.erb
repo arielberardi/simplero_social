@@ -1,0 +1,24 @@
+<div id="<%= dom_id comment %>" class="flex flex-col align-start">
+  <div id="comment-body-<%= comment.id %>">
+    <p class="mt-2"><%= comment.content %></p>
+  </div>
+  <div id="comment-form-<%= comment.id %>" class="hidden">
+    <%= render partial: 'comments/form', locals: { comment: comment } %>
+  </div>
+  <div id="comment-footer-<%= comment.id %>" class="mt-2 font-medium italic text-gray-500">
+    <p>
+      <%= time_from_last_update(comment) %> .
+      <%= link_to 'Edit', nil,
+          data: {
+            controller: 'comments',
+            action: 'comments#toggleForm',
+            comments_id_param: comment.id,
+          }
+      %> .
+      <%= link_to 'Delete',
+          [comment.post, comment],
+          data: { 'turbo-method': :delete, 'turbo-confirm': 'Are you sure?' }
+      %>
+    </p>
+  </div>
+</div>

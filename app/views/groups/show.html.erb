@@ -1,0 +1,14 @@
+<div class="mx-auto w-2/3 flex">
+  <div class="mx-auto flex flex-col">
+    <div class="mt-5">
+      <%= render @group %>
+    </div>
+    <div class="mt-5">
+      <%= render partial: 'posts/form', locals: { post: @group.posts.build } %>
+    </div>
+    <div class='mt-30'>
+      <h1 class="title-secondary">All posts</h1>
+      <%= render partial: 'posts/post', collection: @posts %>
+    </div>
+  </div>
+</div>

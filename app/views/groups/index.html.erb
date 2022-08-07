@@ -1,0 +1,16 @@
+<div class="flex w-full flex-col">
+  <h1 class="title-primary">Groups</h1>
+  <div class="flex w-full items-center">
+    <div class="flex">
+      FILTERS
+    </div>
+    <div class="flex w-full justify-end">
+      <%= button_to new_group_url, method: :get, data: { turbo_frame: 'groups_form_modal' }, class: 'btn-primary' do %>
+        <i class="fa-solid fa-plus"></i> Create a new group
+      <% end %>
+    </div>
+  </div>
+  <div id="groups" class="min-w-full mt-10">
+    <%= render @groups %>
+  </div>
+</div>
