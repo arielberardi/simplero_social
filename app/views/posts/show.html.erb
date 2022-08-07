@@ -1,15 +1,13 @@
 <div class="mx-auto md:w-2/3 w-full flex">
   <div class="mx-auto">
-    <% if notice.present? %>
-      <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
-    <% end %>
-
-    <%= render @post %>
-
-    <%= link_to 'Edit this post', edit_group_post_path(@group, @post), class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-    <div class="inline-block ml-2">
-      <%= button_to 'Destroy this post', group_post_path(@group, @post), method: :delete, class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 font-medium" %>
+    <h1 class="font-bold text-5xl mt-10"><%= @post.title %></h1>
+    <p class="text-xl mt-10"><%= @post.content %></p>
+    <h1 class="font-bold text-3xl mt-20">Comments</h1>
+    <div class="mt-5 mb-10">
+      <%= render partial: 'comments/comment', collection: @comments %>
     </div>
-    <%= link_to 'Back to posts', group_posts_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+    <div class="mt-5">
+      <%= render partial: 'comments/form', locals: { comment: @post.comments.build } %>
+    </div>
   </div>
 </div>

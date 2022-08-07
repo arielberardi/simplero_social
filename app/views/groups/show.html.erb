@@ -1,15 +1,12 @@
 <div class="mx-auto md:w-2/3 w-full flex">
-  <div class="mx-auto">
-    <% if notice.present? %>
-      <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
-    <% end %>
-
-    <%= render @group %>
-
-    <%= link_to 'Edit this group', edit_group_path(@group), class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-    <div class="inline-block ml-2">
-      <%= button_to 'Destroy this group', group_path(@group), method: :delete, class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 font-medium" %>
+  <div class="mx-auto flex flex-col">
+    <h1 class="font-bold text-5xl mt-10"><%= @group.title %></h1>
+    <div class="mt-5">
+      <%= render partial: 'posts/form', locals: { post: @group.posts.build } %>
     </div>
-    <%= link_to 'Back to groups', groups_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+    <div class='mt-30'>
+      <h1 class="font-bold text-3xl mt-10">All posts</h1>
+      <%= render partial: 'posts/post', collection: @posts %>
+    </div>
   </div>
 </div>

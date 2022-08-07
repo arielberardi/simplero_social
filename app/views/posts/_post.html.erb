@@ -1,17 +1,33 @@
 <div id="<%= dom_id post %>">
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Title:</strong>
-    <%= post.title %>
-  </p>
+  <div id="post-body-<%= post.id %>">
+    <p class="my-5">
+      <strong class="block font-medium mb-1">Title:</strong>
+      <%= post.title %>
+    </p>
 
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Content:</strong>
-    <%= post.content %>
-  </p>
-
-  <% if action_name != "show" %>
-    <%= link_to "Show this post", group_post_path(post.group, post), class: "rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-    <%= link_to 'Edit this post', edit_group_post_path(post.group, post), class: "rounded-lg py-3 ml-2 px-5 bg-gray-100 inline-block font-medium" %>
-    <hr class="mt-6">
-  <% end %>
+    <p class="my-5">
+      <strong class="block font-medium mb-1">Content:</strong>
+      <%= post.content %>
+    </p>
+  </div>
+  <div id="post-form-<%= post.id %>" class="hidden">
+    <%= render partial: 'posts/form', locals: { post: post } %>
+  </div>
+  <div id="post-footer-<%= post.id %>" class="flex-col mt-2 font-medium italic text-gray-500">
+    <div class="flex">
+      <%= time_from_last_comment(post) %> .
+      <%= link_to 'Edit', nil, remote: true,
+          data: {
+            controller: 'posts',
+            action: 'posts#toggleForm',
+            posts_id_param: post.id,
+          }
+      %> .
+      <%= link_to 'Destroy',
+          [post.group, post],
+          data: { 'turbo-method': :delete, 'turbo-confirm': 'Are you sure?' }
+      %>
+    </div>
+    <%= link_to 'View', [post.group, post], remote: true %>
+  </div>
 </div>

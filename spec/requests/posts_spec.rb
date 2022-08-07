@@ -8,18 +8,6 @@ RSpec.describe '/posts', type: :request do
   let(:valid_attributes) { attributes_for(:post) }
   let(:invalid_attributes) { attributes_for(:post, title: '') }
 
-  describe 'GET /index' do
-    before { mock_post }
-
-    subject do
-      get group_posts_url(group_id)
-      response
-    end
-
-    it { is_expected.to be_successful }
-    it { expect(subject.body).to include(Post.last.title) }
-  end
-
   describe 'GET /show' do
     subject do
       get group_post_url(group_id, mock_post)
@@ -28,26 +16,6 @@ RSpec.describe '/posts', type: :request do
 
     it { is_expected.to be_successful }
     it { expect(subject.body).to include(Post.last.title) }
-  end
-
-  describe 'GET /new' do
-    subject do
-      get new_group_post_url(group_id)
-      response
-    end
-
-    it { is_expected.to be_successful }
-  end
-
-  describe 'GET /edit' do
-    before { mock_post }
-
-    subject do
-      get edit_group_post_url(group_id, mock_post)
-      response
-    end
-
-    it { is_expected.to be_successful }
   end
 
   describe 'POST /create' do
@@ -59,7 +27,7 @@ RSpec.describe '/posts', type: :request do
     end
 
     it { expect { subject }.to change(Post, :count).by(1) }
-    it { is_expected.to redirect_to(group_post_url(group_id, Post.last)) }
+    it { is_expected.to redirect_to(group_url(group_id)) }
 
     context 'with invalid parameters' do
       let(:post_attributes) { invalid_attributes }
@@ -84,7 +52,7 @@ RSpec.describe '/posts', type: :request do
       expect(Post.last.title).to eq(new_attributes[:title])
     end
 
-    it { is_expected.to redirect_to(group_post_url(group_id, mock_post)) }
+    it { is_expected.to redirect_to(group_url(group_id)) }
 
     context 'with invalid parameters' do
       let(:new_attributes) { invalid_attributes }
@@ -102,6 +70,6 @@ RSpec.describe '/posts', type: :request do
     end
 
     it { expect { subject }.to change(Post, :count).by(-1) }
-    it { is_expected.to redirect_to(group_posts_url(group_id)) }
+    it { is_expected.to redirect_to(group_url(group_id)) }
   end
 end

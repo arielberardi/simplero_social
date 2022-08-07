@@ -2,41 +2,26 @@ class CommentsController < ApplicationController
   before_action :set_post
   before_action :set_comment, only: %i[show edit update destroy]
 
-  # GET /comments or /comments.json
-  def index
-    @comments = @post.comments
-  end
-
-  # GET /comments/1
-  def show
-  end
-
-  # GET /comments/new
-  def new
-    @comment = @post.comments.new
-  end
-
-  # GET /comments/1/edit
-  def edit
-  end
-
   # POST /comments
   def create
     @comment = @post.comments.new(comment_params)
 
     if @comment.save
-      redirect_to post_comment_url(@post, @comment), notice: 'Comment was successfully created.'
+      redirect_to redirect_to_post, notice: 'Comment was successfully created.'
     else
-      render :new, status: :unprocessable_entity
+      redirect_to redirect_to_post, status: :unprocessable_entity
     end
+  end
+
+  def edit
   end
 
   # PATCH/PUT /comments/1
   def update
     if @comment.update(comment_params)
-      redirect_to post_comment_url(@post, @comment), notice: 'Comment was successfully updated.'
+      redirect_to redirect_to_post, notice: 'Comment was successfully updated.'
     else
-      render :edit, status: :unprocessable_entity
+      redirect_to redirect_to_post, status: :unprocessable_entity
     end
   end
 
@@ -44,7 +29,8 @@ class CommentsController < ApplicationController
   def destroy
     @comment.destroy
 
-    redirect_to post_comments_url(@post), notice: 'Comment was successfully destroyed.'
+    # Using turbo requires to return status. https://github.com/rails/rails/issues/44170
+    redirect_to redirect_to_post, status: :see_other, notice: 'Comment was successfully destroyed.'
   end
 
   private
@@ -59,5 +45,9 @@ class CommentsController < ApplicationController
 
   def comment_params
     params.require(:comment).permit(:content)
+  end
+
+  def redirect_to_post
+    group_post_url(@post.group.id, @post)
   end
 end

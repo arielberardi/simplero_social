@@ -1,12 +1,22 @@
-<div id="<%= dom_id comment %>">
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Content:</strong>
-    <%= comment.content %>
-  </p>
-
-  <% if action_name != "show" %>
-    <%= link_to "Show this comment", post_comment_path(comment.post.id, comment), class: "rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-    <%= link_to 'Edit this comment', edit_post_comment_path(comment.post.id, comment), class: "rounded-lg py-3 ml-2 px-5 bg-gray-100 inline-block font-medium" %>
-    <hr class="mt-6">
-  <% end %>
+<div id="<%= dom_id comment %>" class="flex flex-col align-start">
+  <div id="comment-body-<%= comment.id %>">
+    <p class="mt-2"><%= comment.content %></p>
+  </div>
+  <div id="comment-form-<%= comment.id %>" class="hidden">
+    <%= render partial: 'comments/form', locals: { comment: comment } %>
+  </div>
+  <div id="comment-footer-<%= comment.id %>" class="mt-2 font-medium italic text-gray-500">
+    <%= time_from_last_update(comment) %> .
+    <%= link_to 'Edit', nil, remote: true,
+        data: {
+          controller: 'comments',
+          action: 'comments#toggleForm',
+          comments_id_param: comment.id,
+        }
+    %> .
+    <%= link_to 'Destroy',
+        [comment.post, comment],
+        data: { 'turbo-method': :delete, 'turbo-confirm': 'Are you sure?' }
+    %>
+  </div>
 </div>

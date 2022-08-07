@@ -9,6 +9,7 @@ class PostsController < ApplicationController
 
   # GET /posts/1
   def show
+    @comments = @post.comments.all
   end
 
   # GET /posts/new
@@ -25,18 +26,18 @@ class PostsController < ApplicationController
     @post = @group.posts.new(post_params)
 
     if @post.save
-      redirect_to group_post_url(@group, @post), notice: 'Post was successfully created.'
+      redirect_to group_url(@group), notice: 'Post was successfully created.'
     else
-      render :new, status: :unprocessable_entity
+      redirect_to group_url(@group), status: :unprocessable_entity
     end
   end
 
   # PATCH/PUT /posts/1
   def update
     if @post.update(post_params)
-      redirect_to group_post_url(@group, @post), notice: 'Post was successfully updated.'
+      redirect_to group_url(@group), notice: 'Post was successfully created.'
     else
-      render :edit, status: :unprocessable_entity
+      redirect_to group_url(@group), status: :unprocessable_entity
     end
   end
 
@@ -44,7 +45,8 @@ class PostsController < ApplicationController
   def destroy
     @post.destroy
 
-    redirect_to group_posts_url, notice: 'Post was successfully destroyed.'
+    # Using turbo requires to return status. https://github.com/rails/rails/issues/44170
+    redirect_to group_url(@group), status: :see_other, notice: 'Post was successfully destroyed.'
   end
 
   private

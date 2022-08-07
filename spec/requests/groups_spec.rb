@@ -25,26 +25,6 @@ RSpec.describe '/groups', type: :request do
     # it { is_expected.to be_successful }
   end
 
-  describe 'GET /new' do
-    subject do
-      get new_group_url
-      response
-    end
-
-    it { is_expected.to be_successful }
-  end
-
-  describe 'GET /edit' do
-    before { group }
-
-    subject do
-      get edit_group_url(group)
-      response
-    end
-
-    # it { is_expected.to be_successful }
-  end
-
   describe 'POST /create' do
     let(:group_attributes) { valid_attributes }
 

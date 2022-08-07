@@ -8,15 +8,7 @@ class GroupsController < ApplicationController
 
   # GET /groups/1
   def show
-  end
-
-  # GET /groups/new
-  def new
-    @group = Group.new
-  end
-
-  # GET /groups/1/edit
-  def edit
+    @posts = @group.posts.all
   end
 
   # POST /groups
@@ -26,7 +18,7 @@ class GroupsController < ApplicationController
     if @group.save
       redirect_to group_url(@group), notice: 'Group was successfully created.'
     else
-      render :new, status: :unprocessable_entity
+      redirect_to groups_url, status: :unprocessable_entity
     end
   end
 
@@ -35,7 +27,7 @@ class GroupsController < ApplicationController
     if @group.update(group_params)
       redirect_to group_url(@group), notice: 'Group was successfully updated.'
     else
-      render :edit, status: :unprocessable_entity
+      redirect_to group_url(@group), status: :unprocessable_entity
     end
   end
 
