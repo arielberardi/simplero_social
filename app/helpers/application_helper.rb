@@ -18,4 +18,12 @@ module ApplicationHelper
       "Updated #{time_ago_in_words(post.updated_at)} ago"
     end
   end
+
+  def form_submit_name(action_name)
+    action_name == 'edit' ? 'Save' : 'Create'
+  end
+
+  def form_title_name(action_name)
+    action_name == 'edit' ? 'Edit' : 'Create'
+  end
 end

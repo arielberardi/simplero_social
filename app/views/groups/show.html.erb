@@ -1,7 +1,7 @@
 <div class="mx-auto w-2/3 flex">
   <div class="mx-auto flex flex-col">
-    <div class="flex items-center">
-      <h1 class="title-primary"><%= @group.title %></h1>
+    <div class="mt-5">
+      <%= render @group %>
     </div>
     <div class="mt-5">
       <%= render partial: 'posts/form', locals: { post: @group.posts.build } %>

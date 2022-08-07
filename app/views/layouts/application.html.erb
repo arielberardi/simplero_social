@@ -10,7 +10,8 @@
     <%= javascript_importmap_tags %>
   </head>
   <body class="bg-gray-100">
-    <main class="container mx-auto mt-5 px-5 flex">
+    <main class="container relative mx-auto mt-5 px-5 flex">
+      <%= turbo_frame_tag :groups_form_modal %>
       <%= yield %>
     </main>
   </body>

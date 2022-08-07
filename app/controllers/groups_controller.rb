@@ -11,23 +11,46 @@ class GroupsController < ApplicationController
     @posts = @group.posts.all
   end
 
+  # GET /groups/new
+  def new
+    @group = Group.new
+  end
+
+  # GET /groups/1/edit
+  def edit
+  end
+
   # POST /groups
   def create
     @group = Group.new(group_params)
 
-    if @group.save
-      redirect_to group_url(@group), notice: 'Group was successfully created.'
-    else
-      redirect_to groups_url, status: :unprocessable_entity
+    respond_to do |format|
+      if @group.save
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.append('groups',
+                                                    partial: 'groups/group',
+                                                    locals: { group: @group })
+        end
+        format.html { redirect_to group_url(@group), notice: 'Group was successfully created.' }
+      else
+        format.html { render :new, status: :unprocessable_entity }
+      end
     end
   end
 
   # PATCH/PUT /groups/1
   def update
-    if @group.update(group_params)
-      redirect_to group_url(@group), notice: 'Group was successfully updated.'
-    else
-      redirect_to group_url(@group), status: :unprocessable_entity
+    respond_to do |format|
+      if @group.update(group_params)
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace(@group,
+                                                    partial: 'groups/show_group',
+                                                    locals: { group: @group })
+        end
+        format.html { redirect_to group_url(@group), notice: 'Group was successfully updated.' }
+      else
+        format.html { render :edit, status: :unprocessable_entity }
+      end
     end
   end
 
