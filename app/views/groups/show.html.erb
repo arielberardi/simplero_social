@@ -1,11 +1,13 @@
-<div class="mx-auto md:w-2/3 w-full flex">
+<div class="mx-auto w-2/3 flex">
   <div class="mx-auto flex flex-col">
-    <h1 class="font-bold text-5xl mt-10"><%= @group.title %></h1>
+    <div class="flex items-center">
+      <h1 class="title-primary"><%= @group.title %></h1>
+    </div>
     <div class="mt-5">
       <%= render partial: 'posts/form', locals: { post: @group.posts.build } %>
     </div>
     <div class='mt-30'>
-      <h1 class="font-bold text-3xl mt-10">All posts</h1>
+      <h1 class="title-secondary">All posts</h1>
       <%= render partial: 'posts/post', collection: @posts %>
     </div>
   </div>
