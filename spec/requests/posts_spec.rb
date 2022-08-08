@@ -8,14 +8,19 @@ RSpec.describe '/posts', type: :request do
   let(:valid_attributes) { attributes_for(:post) }
   let(:invalid_attributes) { attributes_for(:post, title: '') }
 
+  let(:comment) { FactoryBot.create(:comment, post: mock_post) }
+
   describe 'GET /show' do
+    before { comment }
+
     subject do
       get group_post_url(group_id, mock_post)
       response
     end
 
     it { is_expected.to be_successful }
-    it { expect(subject.body).to include(Post.last.title) }
+    it { expect(subject.body).to include(mock_post.title) }
+    it { expect(subject.body).to include(comment.content.to_plain_text) }
   end
 
   describe 'POST /create' do
@@ -57,12 +62,20 @@ RSpec.describe '/posts', type: :request do
     context 'with invalid parameters' do
       let(:new_attributes) { invalid_attributes }
 
+      it 'does not change an attribute of current post' do
+        subject
+        expect(Post.last.title).to eq(mock_post.title)
+      end
+
       it { expect(subject).to have_http_status(:unprocessable_entity) }
     end
   end
 
   describe 'DELETE /destroy' do
-    before { mock_post }
+    before do
+      mock_post
+      comment
+    end
 
     subject do
       delete group_post_url(group_id, mock_post)
@@ -70,6 +83,7 @@ RSpec.describe '/posts', type: :request do
     end
 
     it { expect { subject }.to change(Post, :count).by(-1) }
+    it { expect { subject }.to change(Comment, :count).by(-1) }
     it { is_expected.to redirect_to(group_url(group_id)) }
   end
 end

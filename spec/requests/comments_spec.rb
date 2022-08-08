@@ -40,8 +40,18 @@ RSpec.describe '/comments', type: :request do
 
     it { is_expected.to redirect_to(group_post_url(group_id, post_id)) }
 
+    it 'changes the content of the comment' do
+      subject
+      expect(Comment.last.content.to_plain_text).to eq(new_attributes[:content])
+    end
+
     context 'with invalid parameters' do
       let(:new_attributes) { invalid_attributes }
+
+      it 'does not change the content of the comment' do
+        subject
+        expect(Comment.last.content.to_plain_text).to eq(comment.content.to_plain_text)
+      end
 
       it { expect(subject).to have_http_status(:unprocessable_entity) }
     end
