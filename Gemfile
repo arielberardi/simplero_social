@@ -73,3 +73,5 @@ end
 
 gem 'view_component'
 gem 'devise'
+gem 'rubocop', require: false
+gem 'rubocop-rails', require: false
