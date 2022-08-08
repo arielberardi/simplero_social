@@ -6,6 +6,8 @@ RSpec.describe '/groups', type: :request do
   let(:valid_attributes) { attributes_for(:group) }
   let(:invalid_attributes) { attributes_for(:group, title: '') }
 
+  before { sign_in FactoryBot.create(:user) }
+
   describe 'GET /index' do
     before { group }
 

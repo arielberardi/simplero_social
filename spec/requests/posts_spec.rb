@@ -10,6 +10,8 @@ RSpec.describe '/posts', type: :request do
 
   let(:comment) { FactoryBot.create(:comment, post: mock_post) }
 
+  before { sign_in FactoryBot.create(:user) }
+
   describe 'GET /show' do
     before { comment }
 

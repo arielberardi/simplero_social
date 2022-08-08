@@ -9,6 +9,8 @@ RSpec.describe '/comments', type: :request do
   let(:valid_attributes) { attributes_for(:comment) }
   let(:invalid_attributes) { attributes_for(:comment, content: '') }
 
+  before { sign_in FactoryBot.create(:user) }
+
   describe 'POST /create' do
     let(:comment_attributes) { valid_attributes }
 
