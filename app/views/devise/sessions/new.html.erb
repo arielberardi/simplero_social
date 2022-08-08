@@ -1,0 +1,11 @@
+<div class="flex w-full justify-center">
+  <div class="flex-col mt-20">
+    <h2 class="title-primary text-center">Log in</h2>
+    <%= form_for(resource, as: resource_name, url: user_session_path, data: { turbo: false }) do |f| %>
+        <%= f.email_field :email, autofocus: true, autocomplete: 'email', placeholder: 'Email', class: 'form-input-text' %>
+        <%= f.password_field :password, autocomplete: 'current-password', placeholder: 'Password', class: 'form-input-text' %>
+        <%= f.submit 'Login', class: 'btn-primary w-full mt-5' %>
+    <% end %>
+    <%= link_to 'Sing Up', new_user_registration_path, class: 'btn-secondary w-full mt-5 text-center' %>
+  </div>
+</div>
