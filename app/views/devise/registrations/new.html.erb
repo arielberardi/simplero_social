@@ -1,7 +1,7 @@
 <div class="flex w-full justify-center">
   <div class="flex-col mt-20">
     <h2 class="title-primary text-center">Sign up</h2>
-    <%= form_for(resource, as: resource_name, url: users_sign_up_path, data: { turbo: false }) do |f| %>
+    <%= form_for(resource, as: resource_name, url: user_registration_path, data: { turbo: false }) do |f| %>
         <%= f.email_field :email, autofocus: true, autocomplete: 'email', placeholder: 'Email', class: 'form-input-text' %>
         <%= f.password_field :password, autocomplete: 'current-password', placeholder: 'Password', class: 'form-input-text' %>
         <%= f.password_field :password_confirmation, autocomplete: "new-password", placeholder: 'Confirm Password', class: 'form-input-text' %>
