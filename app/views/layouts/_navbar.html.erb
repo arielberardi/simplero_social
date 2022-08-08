@@ -1,7 +1,10 @@
 <nav class="bg-white border-gray-200 px-2 py-2.5">
   <div class="container flex justify-end">
-    <ul>
+    <ul class="flex space-x-6">
       <li><%= link_to 'Groups', groups_url, class: 'hover:text-gray-700 hover:underline' %></li>
+      <% if current_user %>
+        <li><%= link_to 'Sign out', destroy_user_session_path, data: { turbo_method: :delete }, class: 'hover:text-gray-700 hover:underline' %></li>
+      <% end %>
     </ul>
   </div>
 </nav>
