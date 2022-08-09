@@ -8,4 +8,6 @@ class Comment < ApplicationRecord
   has_rich_text :content
 
   validates :content, presence: true
+
+  scope :parents, -> { where(parent_id: nil) }
 end
