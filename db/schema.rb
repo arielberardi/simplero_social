@@ -60,17 +60,19 @@ ActiveRecord::Schema[7.0].define(version: 2022_08_08_013941) do
   end
 
   create_table "groups", force: :cascade do |t|
-    t.string "title", null: false
+    t.string "title", default: "", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["title"], name: "index_groups_on_title", unique: true
   end
 
   create_table "posts", force: :cascade do |t|
-    t.string "title", null: false
+    t.string "title", default: "", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "group_id", null: false
+    t.bigint "group_id", default: 0, null: false
     t.index ["group_id"], name: "index_posts_on_group_id"
+    t.index ["title", "group_id"], name: "index_posts_on_title_and_group_id", unique: true
   end
 
   create_table "users", force: :cascade do |t|

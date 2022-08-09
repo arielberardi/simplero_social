@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ApplicationHelper
   def time_from_last_update(comment)
     return nil if comment.nil?

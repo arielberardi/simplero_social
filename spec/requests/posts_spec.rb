@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe '/posts', type: :request do
   let(:group) { FactoryBot.create(:group) }
   let(:group_id) { group.id }
 
-  let(:mock_post) { FactoryBot.create(:post, group: group) }
+  let(:mock_post) { FactoryBot.create(:post, group:) }
   let(:valid_attributes) { attributes_for(:post) }
   let(:invalid_attributes) { attributes_for(:post, title: '') }
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PostsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_group
@@ -19,15 +21,14 @@ class PostsController < ApplicationController
   end
 
   # GET /posts/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /posts
   def create
     @post = @group.posts.new(post_params)
 
     if @post.save
-      redirect_to group_url(@group), notice: 'Post was successfully created.'
+      redirect_to group_url(@group), notice: locale('created')
     else
       redirect_to group_url(@group), status: :unprocessable_entity
     end
@@ -36,7 +37,7 @@ class PostsController < ApplicationController
   # PATCH/PUT /posts/1
   def update
     if @post.update(post_params)
-      redirect_to group_url(@group), notice: 'Post was successfully created.'
+      redirect_to group_url(@group), notice: locale('updated')
     else
       redirect_to group_url(@group), status: :unprocessable_entity
     end
@@ -47,7 +48,7 @@ class PostsController < ApplicationController
     @post.destroy
 
     # Using turbo requires to return status. https://github.com/rails/rails/issues/44170
-    redirect_to group_url(@group), status: :see_other, notice: 'Post was successfully destroyed.'
+    redirect_to group_url(@group), status: :see_other, notice: locale('destroyed')
   end
 
   private
@@ -62,5 +63,9 @@ class PostsController < ApplicationController
 
   def post_params
     params.require(:post).permit(:title, :content)
+  end
+
+  def locale(action)
+    I18n.t('notice.success', action:, resource: 'Post')
   end
 end

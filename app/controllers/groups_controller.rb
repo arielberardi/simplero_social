@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GroupsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_group, only: %i[show edit update destroy]
@@ -18,8 +20,7 @@ class GroupsController < ApplicationController
   end
 
   # GET /groups/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /groups
   def create
@@ -29,10 +30,10 @@ class GroupsController < ApplicationController
       if @group.save
         format.turbo_stream do
           render turbo_stream: turbo_stream.append('groups',
-                                                    partial: 'groups/group',
-                                                    locals: { group: @group })
+                                                   partial: 'groups/group',
+                                                   locals: { group: @group })
         end
-        format.html { redirect_to group_url(@group), notice: 'Group was successfully created.' }
+        format.html { redirect_to group_url(@group), notice: locale('created') }
       else
         format.html { render :new, status: :unprocessable_entity }
       end
@@ -48,7 +49,7 @@ class GroupsController < ApplicationController
                                                     partial: 'groups/show_group',
                                                     locals: { group: @group })
         end
-        format.html { redirect_to group_url(@group), notice: 'Group was successfully updated.' }
+        format.html { redirect_to group_url(@group), notice: locale('updated') }
       else
         format.html { render :edit, status: :unprocessable_entity }
       end
@@ -59,7 +60,7 @@ class GroupsController < ApplicationController
   def destroy
     @group.destroy
 
-    redirect_to groups_url, notice: 'Group was successfully destroyed.'
+    redirect_to groups_url, notice: locale('destroyed')
   end
 
   private
@@ -70,5 +71,9 @@ class GroupsController < ApplicationController
 
   def group_params
     params.require(:group).permit(:title)
+  end
+
+  def locale(action)
+    I18n.t('notice.success', action:, resource: 'Group')
   end
 end
