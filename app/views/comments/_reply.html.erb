@@ -1,0 +1,12 @@
+<%= form_with(model: [comment.post, Comment.new], class: 'contents', namespace: "reply_#{comment.id}") do |form| %>
+  <%= form.hidden_field :parent_id, value: comment.id %>
+  <div class="my-5">
+    <%= form.rich_text_area :content,
+        class: 'form-input-text',
+        placeholder: 'You can type @ to mention someone'
+    %>
+  </div>
+  <div class="flex flex-col items-end">
+    <%= form.submit 'Reply', class: 'btn-primary' %>
+  </div>
+<% end %>

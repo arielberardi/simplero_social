@@ -1,4 +1,4 @@
-<%= form_with(model: [comment.post, comment], class: "contents") do |form| %>
+<%= form_with(model: [comment.post, comment], class: 'contents', namespace: "comment_#{comment.id}") do |form| %>
   <div class="my-5">
     <%= form.rich_text_area :content,
         class: 'form-input-text',

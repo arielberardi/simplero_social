@@ -15,4 +15,14 @@ export default class extends Controller {
     body.classList.toggle("hidden");
     footer.classList.toggle("hidden");
   }
+
+  toggleReplyForm(event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const commentID = event.params["id"];
+    const form = document.getElementById(`reply-form-${commentID}`);
+
+    form.classList.toggle("hidden");
+  }
 }
