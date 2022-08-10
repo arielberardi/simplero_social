@@ -10,7 +10,7 @@
     <div class="flex">
       <p>
         <%= time_from_last_comment(post) %>
-        <% if current_owner(post) %>
+        <% if can_edit_or_delete?(post) %>
           .
           <%= link_to 'Edit', nil,
               data: {

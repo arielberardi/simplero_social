@@ -8,7 +8,7 @@
   <div id="comment-footer-<%= comment.id %>" class="mt-2 font-medium italic text-gray-500">
     <p>
       <%= time_from_last_update(comment) %> .
-      <% if current_owner(comment) %>
+      <% if can_edit_or_delete?(comment) %>
         <%= button_tag 'Edit',
             data: {
               controller: 'comments',

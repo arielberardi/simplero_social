@@ -4,9 +4,10 @@ require 'rails_helper'
 
 RSpec.describe '/comments', type: :request do
   let(:user) { FactoryBot.create(:user) }
-  let(:mock_post) { FactoryBot.create(:post) }
+  let(:group) { FactoryBot.create(:group) }
+  let(:group_id) { group.id }
+  let(:mock_post) { FactoryBot.create(:post, group: group) }
   let(:post_id) { mock_post.id }
-  let(:group_id) { mock_post.group.id }
 
   let(:comment) { FactoryBot.create(:comment, post: mock_post, user: user) }
   let(:valid_attributes) { attributes_for(:comment) }
@@ -66,6 +67,17 @@ RSpec.describe '/comments', type: :request do
       let(:comment) { FactoryBot.create(:comment, post: mock_post, user: new_user) }
 
       it { is_expected.to have_http_status(:unauthorized) }
+
+      context 'and is the owner of the group' do
+        let(:group) { FactoryBot.create(:group, user: user) }
+
+        it { is_expected.to redirect_to(group_post_url(group_id, post_id)) }
+
+        it 'changes the content of the comment' do
+          subject
+          expect(Comment.last.content.to_plain_text).to eq(new_attributes[:content])
+        end
+      end
     end
   end
 
@@ -85,6 +97,13 @@ RSpec.describe '/comments', type: :request do
       let(:comment) { FactoryBot.create(:comment, post: mock_post, user: new_user) }
 
       it { is_expected.to have_http_status(:unauthorized) }
+
+      context 'and is the owner of the group' do
+        let(:group) { FactoryBot.create(:group, user: user) }
+
+        it { expect { subject }.to change(Comment, :count).by(-1) }
+        it { is_expected.to redirect_to(group_post_url(group_id, post_id)) }
+      end
     end
   end
 end

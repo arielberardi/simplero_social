@@ -8,7 +8,7 @@ class CommentsController < ApplicationController
 
   # POST /comments
   def create
-    @comment = @post.comments.new(comment_params)
+    @comment = @post.comments.new(comment_params.merge(user: current_user))
 
     if @comment.save
       redirect_to redirect_to_post, notice: locale('created')
@@ -45,7 +45,7 @@ class CommentsController < ApplicationController
   end
 
   def comment_params
-    params.require(:comment).permit(:content, :parent_id).merge(user: current_user)
+    params.require(:comment).permit(:content, :parent_id)
   end
 
   def redirect_to_post

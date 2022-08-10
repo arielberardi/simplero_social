@@ -1,7 +1,7 @@
 <div id="<%= dom_id group %>">
   <div class="flex items-center">
     <h1 class="title-primary"><%= group.title %></h1>
-    <% if current_owner(group) %>
+    <% if can_edit_or_delete?(group) %>
       <%= button_to edit_group_url(group), method: :get, data: { turbo_frame: 'groups_form_modal' } do %>
         <i class="fa-solid fa-gear ml-10 text-3xl text-gray-700"></i>
       <% end %>

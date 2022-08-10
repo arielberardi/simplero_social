@@ -23,7 +23,7 @@ class PostsController < ApplicationController
 
   # POST /posts
   def create
-    @post = @group.posts.new(post_params)
+    @post = @group.posts.new(post_params.merge(user: current_user))
 
     if @post.save
       redirect_to group_url(@group), notice: locale('created')
@@ -60,7 +60,7 @@ class PostsController < ApplicationController
   end
 
   def post_params
-    params.require(:post).permit(:title, :content).merge(user: current_user)
+    params.require(:post).permit(:title, :content)
   end
 
   def locale(action)
