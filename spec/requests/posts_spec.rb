@@ -80,6 +80,17 @@ RSpec.describe '/posts', type: :request do
       let(:mock_post) { FactoryBot.create(:post, group: group, user: new_user) }
 
       it { is_expected.to have_http_status(:unauthorized) }
+
+      context 'and is the owner of the group' do
+        let(:group) { FactoryBot.create(:group, user: user) }
+
+        it 'changes an attribute of current post' do
+          subject
+          expect(Post.last.title).to eq(new_attributes[:title])
+        end
+
+        it { is_expected.to redirect_to(group_url(group_id)) }
+      end
     end
   end
 
@@ -103,6 +114,14 @@ RSpec.describe '/posts', type: :request do
       let(:mock_post) { FactoryBot.create(:post, group: group, user: new_user) }
 
       it { is_expected.to have_http_status(:unauthorized) }
+
+      context 'and is the owner of the group' do
+        let(:group) { FactoryBot.create(:group, user: user) }
+
+        it { expect { subject }.to change(Post, :count).by(-1) }
+        it { expect { subject }.to change(Comment, :count).by(-1) }
+        it { is_expected.to redirect_to(group_url(group_id)) }
+      end
     end
   end
 end
