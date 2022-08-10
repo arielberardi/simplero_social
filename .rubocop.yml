@@ -7,6 +7,9 @@ AllCops:
 Style/Documentation:
   Enabled: false
 
+Style/HashSyntax:
+  Enabled: false
+
 Metrics/BlockLength:
   Enabled: false
 
@@ -17,4 +20,7 @@ Metrics/AbcSize:
   Enabled: false
 
 Rails/InverseOf:
+  Enabled: false
+
+Rails/NotNullColumn:
   Enabled: false
