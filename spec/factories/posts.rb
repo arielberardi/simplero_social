@@ -6,5 +6,6 @@ FactoryBot.define do
     content { Faker::Movie.quote }
 
     group
+    user
   end
 end

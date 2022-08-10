@@ -3,7 +3,8 @@
 class PostsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_group
-  before_action :set_post, only: %i[show edit update destroy]
+  before_action :set_post, only: %i[show update destroy]
+  before_action -> { validates_ownership!(@post) }, only: %i[update destroy]
 
   # GET /posts or /posts.json
   def index
@@ -19,9 +20,6 @@ class PostsController < ApplicationController
   def new
     @post = @group.posts.new
   end
-
-  # GET /posts/1/edit
-  def edit; end
 
   # POST /posts
   def create
@@ -62,10 +60,10 @@ class PostsController < ApplicationController
   end
 
   def post_params
-    params.require(:post).permit(:title, :content)
+    params.require(:post).permit(:title, :content).merge(user: current_user)
   end
 
   def locale(action)
-    I18n.t('notice.success', action:, resource: 'Post')
+    I18n.t('notice.success', action: action, resource: 'Post')
   end
 end

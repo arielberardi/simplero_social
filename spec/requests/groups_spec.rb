@@ -3,12 +3,13 @@
 require 'rails_helper'
 
 RSpec.describe '/groups', type: :request do
-  let(:mock_group) { FactoryBot.create(:group) }
+  let(:user) { FactoryBot.create(:user) }
+  let(:mock_group) { FactoryBot.create(:group, user: user) }
   let(:mock_post) { FactoryBot.create(:post, group: mock_group) }
   let(:valid_attributes) { attributes_for(:group) }
   let(:invalid_attributes) { attributes_for(:group, title: '') }
 
-  before { sign_in FactoryBot.create(:user) }
+  before { sign_in user }
 
   describe 'GET /index' do
     before { mock_group }
@@ -99,6 +100,13 @@ RSpec.describe '/groups', type: :request do
 
       it { expect(subject).to have_http_status(:unprocessable_entity) }
     end
+
+    context 'user is not the owner of the group' do
+      let(:new_user) { FactoryBot.create(:user) }
+      let(:mock_group) { FactoryBot.create(:group, user: new_user) }
+
+      it { is_expected.to have_http_status(:unauthorized) }
+    end
   end
 
   describe 'DELETE /destroy' do
@@ -115,5 +123,12 @@ RSpec.describe '/groups', type: :request do
     it { expect { subject }.to change(Group, :count).by(-1) }
     it { expect { subject }.to change(Post, :count).by(-1) }
     it { is_expected.to redirect_to(groups_url) }
+
+    context 'user is not the owner of the group' do
+      let(:new_user) { FactoryBot.create(:user) }
+      let(:mock_group) { FactoryBot.create(:group, user: new_user) }
+
+      it { is_expected.to have_http_status(:unauthorized) }
+    end
   end
 end

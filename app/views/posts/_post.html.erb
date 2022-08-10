@@ -9,18 +9,21 @@
   <div id="post-footer-<%= post.id %>" class="flex-col mt-2 font-medium italic text-gray-500 mb-5">
     <div class="flex">
       <p>
-        <%= time_from_last_comment(post) %> .
-        <%= link_to 'Edit', nil,
-            data: {
-              controller: 'posts',
-              action: 'posts#toggleForm',
-              posts_id_param: post.id,
-            }
-        %> .
-        <%= link_to 'Delete',
-            [post.group, post],
-            data: { 'turbo-method': :delete, 'turbo-confirm': 'Are you sure?' }
-        %>
+        <%= time_from_last_comment(post) %>
+        <% if current_owner(post) %>
+          .
+          <%= link_to 'Edit', nil,
+              data: {
+                controller: 'posts',
+                action: 'posts#toggleForm',
+                posts_id_param: post.id,
+              }
+          %> .
+          <%= link_to 'Delete',
+              [post.group, post],
+              data: { 'turbo-method': :delete, 'turbo-confirm': 'Are you sure?' }
+          %>
+        <% end %>
       </p>
     </div>
     <%= link_to [post.group, post] do %>

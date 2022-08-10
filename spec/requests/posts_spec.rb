@@ -3,16 +3,17 @@
 require 'rails_helper'
 
 RSpec.describe '/posts', type: :request do
+  let(:user) { FactoryBot.create(:user) }
   let(:group) { FactoryBot.create(:group) }
   let(:group_id) { group.id }
 
-  let(:mock_post) { FactoryBot.create(:post, group:) }
+  let(:mock_post) { FactoryBot.create(:post, group: group, user: user) }
   let(:valid_attributes) { attributes_for(:post) }
   let(:invalid_attributes) { attributes_for(:post, title: '') }
 
   let(:comment) { FactoryBot.create(:comment, post: mock_post) }
 
-  before { sign_in FactoryBot.create(:user) }
+  before { sign_in user }
 
   describe 'GET /show' do
     before { comment }
@@ -73,6 +74,13 @@ RSpec.describe '/posts', type: :request do
 
       it { expect(subject).to have_http_status(:unprocessable_entity) }
     end
+
+    context 'user is not the owner of the post' do
+      let(:new_user) { FactoryBot.create(:user) }
+      let(:mock_post) { FactoryBot.create(:post, group: group, user: new_user) }
+
+      it { is_expected.to have_http_status(:unauthorized) }
+    end
   end
 
   describe 'DELETE /destroy' do
@@ -89,5 +97,12 @@ RSpec.describe '/posts', type: :request do
     it { expect { subject }.to change(Post, :count).by(-1) }
     it { expect { subject }.to change(Comment, :count).by(-1) }
     it { is_expected.to redirect_to(group_url(group_id)) }
+
+    context 'user is not the owner of the post' do
+      let(:new_user) { FactoryBot.create(:user) }
+      let(:mock_post) { FactoryBot.create(:post, group: group, user: new_user) }
+
+      it { is_expected.to have_http_status(:unauthorized) }
+    end
   end
 end

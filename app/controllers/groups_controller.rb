@@ -3,6 +3,7 @@
 class GroupsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_group, only: %i[show edit update destroy]
+  before_action -> { validates_ownership!(@group) }, only: %i[edit update destroy]
 
   # GET /groups
   def index
@@ -70,10 +71,10 @@ class GroupsController < ApplicationController
   end
 
   def group_params
-    params.require(:group).permit(:title)
+    params.require(:group).permit(:title).merge(user: current_user)
   end
 
   def locale(action)
-    I18n.t('notice.success', action:, resource: 'Group')
+    I18n.t('notice.success', action: action, resource: 'Group')
   end
 end
