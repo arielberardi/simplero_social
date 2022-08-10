@@ -3,15 +3,16 @@
 require 'rails_helper'
 
 RSpec.describe '/comments', type: :request do
+  let(:user) { FactoryBot.create(:user) }
   let(:mock_post) { FactoryBot.create(:post) }
   let(:post_id) { mock_post.id }
   let(:group_id) { mock_post.group.id }
 
-  let(:comment) { FactoryBot.create(:comment, post: mock_post) }
+  let(:comment) { FactoryBot.create(:comment, post: mock_post, user: user) }
   let(:valid_attributes) { attributes_for(:comment) }
   let(:invalid_attributes) { attributes_for(:comment, content: '') }
 
-  before { sign_in FactoryBot.create(:user) }
+  before { sign_in user }
 
   describe 'POST /create' do
     let(:comment_attributes) { valid_attributes }
@@ -59,6 +60,13 @@ RSpec.describe '/comments', type: :request do
 
       it { expect(subject).to have_http_status(:unprocessable_entity) }
     end
+
+    context 'user is not the owner of the comment' do
+      let(:new_user) { FactoryBot.create(:user) }
+      let(:comment) { FactoryBot.create(:comment, post: mock_post, user: new_user) }
+
+      it { is_expected.to have_http_status(:unauthorized) }
+    end
   end
 
   describe 'DELETE /destroy' do
@@ -71,5 +79,12 @@ RSpec.describe '/comments', type: :request do
 
     it { expect { subject }.to change(Comment, :count).by(-1) }
     it { is_expected.to redirect_to(group_post_url(group_id, post_id)) }
+
+    context 'user is not the owner of the comment' do
+      let(:new_user) { FactoryBot.create(:user) }
+      let(:comment) { FactoryBot.create(:comment, post: mock_post, user: new_user) }
+
+      it { is_expected.to have_http_status(:unauthorized) }
+    end
   end
 end
