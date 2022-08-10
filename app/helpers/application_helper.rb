@@ -28,4 +28,8 @@ module ApplicationHelper
   def form_title_name(action_name)
     action_name == 'edit' ? 'Edit' : 'Create'
   end
+
+  def current_owner(object)
+    object.user == current_user
+  end
 end
