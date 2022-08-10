@@ -3,7 +3,8 @@
 class CommentsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_post
-  before_action :set_comment, only: %i[edit update destroy]
+  before_action :set_comment, only: %i[update destroy]
+  before_action -> { validates_ownership!(@comment) }, only: %i[update destroy]
 
   # POST /comments
   def create
@@ -15,8 +16,6 @@ class CommentsController < ApplicationController
       redirect_to redirect_to_post, status: :unprocessable_entity
     end
   end
-
-  def edit; end
 
   # PATCH/PUT /comments/1
   def update
@@ -46,7 +45,7 @@ class CommentsController < ApplicationController
   end
 
   def comment_params
-    params.require(:comment).permit(:content, :parent_id)
+    params.require(:comment).permit(:content, :parent_id).merge(user: current_user)
   end
 
   def redirect_to_post
@@ -54,6 +53,6 @@ class CommentsController < ApplicationController
   end
 
   def locale(action)
-    I18n.t('notice.success', action:, resource: 'Comment')
+    I18n.t('notice.success', action: action, resource: 'Comment')
   end
 end
