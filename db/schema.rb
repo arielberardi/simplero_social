@@ -70,6 +70,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_08_10_203208) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["group_id"], name: "index_group_enrollements_on_group_id"
+    t.index ["user_id", "group_id"], name: "index_group_enrollements_on_user_id_and_group_id", unique: true
     t.index ["user_id"], name: "index_group_enrollements_on_user_id"
   end
 

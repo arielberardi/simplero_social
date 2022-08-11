@@ -10,6 +10,6 @@ class User < ApplicationRecord
   has_many :posts, dependent: :destroy
   has_many :comments, dependent: :destroy
 
-  has_many :group_enrollements
+  has_many :group_enrollements, dependent: :destroy
   has_many :joined_groups, through: :group_enrollements, source: :group
 end
