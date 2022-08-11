@@ -4,21 +4,12 @@ class PostsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_group
   before_action :set_post, only: %i[show update destroy]
-  before_action -> { validates_ownership!(@post) }, only: %i[update destroy]
-
-  # GET /posts or /posts.json
-  def index
-    @posts = @group.posts.all
-  end
+  before_action -> { validate_ownership!(@post) }, only: %i[update destroy]
+  before_action :validate_user_enrollment!, only: :show
 
   # GET /posts/1
   def show
     @comments = @post.comments.parents
-  end
-
-  # GET /posts/new
-  def new
-    @post = @group.posts.new
   end
 
   # POST /posts

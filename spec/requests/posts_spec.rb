@@ -6,14 +6,18 @@ RSpec.describe '/posts', type: :request do
   let(:user) { FactoryBot.create(:user) }
   let(:group) { FactoryBot.create(:group) }
   let(:group_id) { group.id }
+  let(:enroll_user) { enroll_user_in_group(user, group) }
 
   let(:mock_post) { FactoryBot.create(:post, group: group, user: user) }
-  let(:valid_attributes) { attributes_for(:post) }
-  let(:invalid_attributes) { attributes_for(:post, title: '') }
+  let(:valid_attributes) { FactoryBot.attributes_for(:post) }
+  let(:invalid_attributes) { FactoryBot.attributes_for(:post, title: '') }
 
   let(:comment) { FactoryBot.create(:comment, post: mock_post) }
 
-  before { sign_in user }
+  before do
+    sign_in user
+    enroll_user
+  end
 
   describe 'GET /show' do
     before { comment }
@@ -26,6 +30,14 @@ RSpec.describe '/posts', type: :request do
     it { is_expected.to be_successful }
     it { expect(subject.body).to include(mock_post.title) }
     it { expect(subject.body).to include(comment.content.to_plain_text) }
+
+    context 'when user is not enrolled' do
+      let(:owner_user) { FactoryBot.create(:user) }
+      let(:mock_group) { FactoryBot.create(:group, user: owner_user) }
+      let(:enroll_user) { nil }
+
+      it { is_expected.to redirect_to(groups_url) }
+    end
   end
 
   describe 'POST /create' do
@@ -48,7 +60,7 @@ RSpec.describe '/posts', type: :request do
   end
 
   describe 'PATCH /update' do
-    let(:new_attributes) { attributes_for(:post) }
+    let(:new_attributes) { FactoryBot.attributes_for(:post) }
 
     before { mock_post }
 
@@ -76,8 +88,8 @@ RSpec.describe '/posts', type: :request do
     end
 
     context 'user is not the owner of the post' do
-      let(:new_user) { FactoryBot.create(:user) }
-      let(:mock_post) { FactoryBot.create(:post, group: group, user: new_user) }
+      let(:owner_user) { FactoryBot.create(:user) }
+      let(:mock_post) { FactoryBot.create(:post, group: group, user: owner_user) }
 
       it { is_expected.to have_http_status(:unauthorized) }
 
@@ -110,8 +122,8 @@ RSpec.describe '/posts', type: :request do
     it { is_expected.to redirect_to(group_url(group_id)) }
 
     context 'user is not the owner of the post' do
-      let(:new_user) { FactoryBot.create(:user) }
-      let(:mock_post) { FactoryBot.create(:post, group: group, user: new_user) }
+      let(:owner_user) { FactoryBot.create(:user) }
+      let(:mock_post) { FactoryBot.create(:post, group: group, user: owner_user) }
 
       it { is_expected.to have_http_status(:unauthorized) }
 

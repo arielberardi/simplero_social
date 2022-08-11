@@ -1,3 +1,6 @@
 en:
   notice:
     success: '%{resource} was successfully %{action}.'
+  groups:
+    join:
+      success: 'You have successfully joined.'

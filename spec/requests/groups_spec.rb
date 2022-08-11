@@ -6,10 +6,14 @@ RSpec.describe '/groups', type: :request do
   let(:user) { FactoryBot.create(:user) }
   let(:mock_group) { FactoryBot.create(:group, user: user) }
   let(:mock_post) { FactoryBot.create(:post, group: mock_group) }
-  let(:valid_attributes) { attributes_for(:group) }
-  let(:invalid_attributes) { attributes_for(:group, title: '') }
+  let(:valid_attributes) { FactoryBot.attributes_for(:group) }
+  let(:invalid_attributes) { FactoryBot.attributes_for(:group, title: '') }
+  let(:enroll_user) { enroll_user_in_group(user, mock_group) }
 
-  before { sign_in user }
+  before do
+    sign_in user
+    enroll_user
+  end
 
   describe 'GET /index' do
     before { mock_group }
@@ -43,6 +47,14 @@ RSpec.describe '/groups', type: :request do
     it { is_expected.to be_successful }
     it { expect(subject.body).to include(mock_group.title) }
     it { expect(subject.body).to include(mock_post.title) }
+
+    context 'when user is not enrolled' do
+      let(:owner_user) { FactoryBot.create(:user) }
+      let(:mock_group) { FactoryBot.create(:group, user: owner_user) }
+      let(:enroll_user) { nil }
+
+      it { is_expected.to redirect_to(groups_url) }
+    end
   end
 
   describe 'GET /edit' do
@@ -52,6 +64,13 @@ RSpec.describe '/groups', type: :request do
     end
 
     it { is_expected.to be_successful }
+
+    context 'when user is not the owner' do
+      let(:owner_user) { FactoryBot.create(:user) }
+      let(:mock_group) { FactoryBot.create(:group, user: owner_user) }
+
+      it { is_expected.to have_http_status(:unauthorized) }
+    end
   end
 
   describe 'POST /create' do
@@ -64,6 +83,7 @@ RSpec.describe '/groups', type: :request do
 
     it { expect { subject }.to change(Group, :count).by(1) }
     it { is_expected.to redirect_to(group_url(Group.last)) }
+    it { expect(Group.last).to eq(user.joined_groups.last) }
 
     context 'with invalid parameters' do
       let(:group_attributes) { invalid_attributes }
@@ -74,7 +94,7 @@ RSpec.describe '/groups', type: :request do
   end
 
   describe 'PATCH /update' do
-    let(:new_attributes) { attributes_for(:group) }
+    let(:new_attributes) { FactoryBot.attributes_for(:group) }
 
     before { mock_group }
 
@@ -101,9 +121,9 @@ RSpec.describe '/groups', type: :request do
       it { expect(subject).to have_http_status(:unprocessable_entity) }
     end
 
-    context 'user is not the owner of the group' do
-      let(:new_user) { FactoryBot.create(:user) }
-      let(:mock_group) { FactoryBot.create(:group, user: new_user) }
+    context 'when user is not the owner' do
+      let(:owner_user) { FactoryBot.create(:user) }
+      let(:mock_group) { FactoryBot.create(:group, user: owner_user) }
 
       it { is_expected.to have_http_status(:unauthorized) }
     end
@@ -124,11 +144,34 @@ RSpec.describe '/groups', type: :request do
     it { expect { subject }.to change(Post, :count).by(-1) }
     it { is_expected.to redirect_to(groups_url) }
 
-    context 'user is not the owner of the group' do
-      let(:new_user) { FactoryBot.create(:user) }
-      let(:mock_group) { FactoryBot.create(:group, user: new_user) }
+    context 'when user is not the owner' do
+      let(:owner_user) { FactoryBot.create(:user) }
+      let(:mock_group) { FactoryBot.create(:group, user: owner_user) }
 
       it { is_expected.to have_http_status(:unauthorized) }
+    end
+  end
+
+  describe 'GET /join' do
+    let(:owner_user) { FactoryBot.create(:user) }
+    let(:mock_group) { FactoryBot.create(:group, user: owner_user) }
+    let(:enroll_user) { nil }
+
+    before { enroll_user_in_group(owner_user, mock_group) }
+
+    subject do
+      get join_group_url(mock_group)
+      response
+    end
+
+    it { is_expected.to redirect_to(group_url(mock_group)) }
+    it { expect { subject }.to change(GroupEnrollement, :count).by(1) }
+
+    context 'when user is the owner or is joined' do
+      let(:user) { owner_user }
+
+      it { is_expected.to redirect_to(group_url(mock_group)) }
+      it { expect { subject }.to change(GroupEnrollement, :count).by(0) }
     end
   end
 end

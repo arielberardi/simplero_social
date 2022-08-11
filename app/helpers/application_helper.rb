@@ -43,4 +43,8 @@ module ApplicationHelper
 
     false
   end
+
+  def user_joined?(group)
+    group.users.include?(current_user)
+  end
 end

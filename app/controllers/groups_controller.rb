@@ -2,8 +2,9 @@
 
 class GroupsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_group, only: %i[show edit update destroy]
-  before_action -> { validates_ownership!(@group) }, only: %i[edit update destroy]
+  before_action :set_group, only: %i[show edit update destroy join]
+  before_action -> { validate_ownership!(@group) }, only: %i[edit update destroy]
+  before_action :validate_user_enrollment!, only: :show
 
   # GET /groups
   def index
@@ -29,6 +30,8 @@ class GroupsController < ApplicationController
 
     respond_to do |format|
       if @group.save
+        GroupEnrollement.create(user: current_user, group: @group)
+
         format.turbo_stream do
           render turbo_stream: turbo_stream.append('groups',
                                                    partial: 'groups/group',
@@ -62,6 +65,13 @@ class GroupsController < ApplicationController
     @group.destroy
 
     redirect_to groups_url, notice: locale('destroyed')
+  end
+
+  # POST /groups/1/join
+  def join
+    GroupEnrollement.create(user: current_user, group: @group)
+
+    redirect_to @group, notice: I18n.t('groups.join.success')
   end
 
   private
