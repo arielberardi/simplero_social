@@ -6,14 +6,19 @@ RSpec.describe '/comments', type: :request do
   let(:user) { FactoryBot.create(:user) }
   let(:group) { FactoryBot.create(:group) }
   let(:group_id) { group.id }
+  let(:enroll_user) { enroll_user_in_group(user, group) }
+
   let(:mock_post) { FactoryBot.create(:post, group: group) }
   let(:post_id) { mock_post.id }
 
   let(:comment) { FactoryBot.create(:comment, post: mock_post, user: user) }
-  let(:valid_attributes) { attributes_for(:comment) }
-  let(:invalid_attributes) { attributes_for(:comment, content: '') }
+  let(:valid_attributes) { FactoryBot.attributes_for(:comment) }
+  let(:invalid_attributes) { FactoryBot.attributes_for(:comment, content: '') }
 
-  before { sign_in user }
+  before do
+    sign_in user
+    enroll_user
+  end
 
   describe 'POST /create' do
     let(:comment_attributes) { valid_attributes }
@@ -32,10 +37,18 @@ RSpec.describe '/comments', type: :request do
       it { expect { subject }.to change(Comment, :count).by(0) }
       it { is_expected.to have_http_status(:unprocessable_entity) }
     end
+
+    context 'when user is not enrolled' do
+      let(:owner_user) { FactoryBot.create(:user) }
+      let(:mock_group) { FactoryBot.create(:group, user: owner_user) }
+      let(:enroll_user) { nil }
+
+      it { is_expected.to redirect_to(groups_url) }
+    end
   end
 
   describe 'PATCH /update' do
-    let(:new_attributes) { attributes_for(:comment) }
+    let(:new_attributes) { FactoryBot.attributes_for(:comment) }
 
     before { comment }
 
@@ -63,8 +76,8 @@ RSpec.describe '/comments', type: :request do
     end
 
     context 'user is not the owner of the comment' do
-      let(:new_user) { FactoryBot.create(:user) }
-      let(:comment) { FactoryBot.create(:comment, post: mock_post, user: new_user) }
+      let(:owner_user) { FactoryBot.create(:user) }
+      let(:comment) { FactoryBot.create(:comment, post: mock_post, user: owner_user) }
 
       it { is_expected.to have_http_status(:unauthorized) }
 
@@ -93,8 +106,8 @@ RSpec.describe '/comments', type: :request do
     it { is_expected.to redirect_to(group_post_url(group_id, post_id)) }
 
     context 'user is not the owner of the comment' do
-      let(:new_user) { FactoryBot.create(:user) }
-      let(:comment) { FactoryBot.create(:comment, post: mock_post, user: new_user) }
+      let(:owner_user) { FactoryBot.create(:user) }
+      let(:comment) { FactoryBot.create(:comment, post: mock_post, user: owner_user) }
 
       it { is_expected.to have_http_status(:unauthorized) }
 

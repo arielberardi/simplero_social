@@ -10,4 +10,6 @@ RSpec.describe Group, type: :model do
 
   it { is_expected.to belong_to(:user) }
   it { is_expected.to have_many(:posts) }
+  it { is_expected.to have_many(:group_enrollements) }
+  it { is_expected.to have_many(:users).through(:group_enrollements) }
 end

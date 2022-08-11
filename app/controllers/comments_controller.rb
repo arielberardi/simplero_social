@@ -4,7 +4,9 @@ class CommentsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_post
   before_action :set_comment, only: %i[update destroy]
-  before_action -> { validates_ownership!(@comment) }, only: %i[update destroy]
+  before_action -> { validate_ownership!(@comment) }, only: %i[update destroy]
+  before_action :set_group, only: :create
+  before_action :validate_user_enrollment!, only: :create
 
   # POST /comments
   def create
@@ -35,6 +37,10 @@ class CommentsController < ApplicationController
   end
 
   private
+
+  def set_group
+    @group = @post.group
+  end
 
   def set_post
     @post = Post.find(params[:post_id])

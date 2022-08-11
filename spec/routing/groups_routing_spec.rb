@@ -35,5 +35,9 @@ RSpec.describe GroupsController, type: :routing do
     it 'routes to #destroy' do
       expect(delete: '/groups/1').to route_to('groups#destroy', id: '1')
     end
+
+    it 'routes to #join' do
+      expect(get: '/groups/1/join').to route_to('groups#join', id: '1')
+    end
   end
 end

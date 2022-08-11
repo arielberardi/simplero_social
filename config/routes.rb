@@ -11,6 +11,7 @@ Rails.application.routes.draw do
     post 'sign_up', to: 'devise/registrations#create', as: :user_registration
   end
 
+  get 'groups/:id/join', to: 'groups#join', as: :join_group
   resources :groups do
     resources :posts, except: %i[index new edit]
   end
