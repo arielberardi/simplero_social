@@ -4,3 +4,6 @@ en:
   groups:
     join:
       success: 'You have successfully joined.'
+    leave:
+      success: 'User was successfully removed.'
+      failed: "User wasn't removed."

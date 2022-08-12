@@ -2,8 +2,8 @@
 
 class GroupsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_group, only: %i[show edit update destroy join]
-  before_action -> { validate_ownership!(@group) }, only: %i[edit update destroy]
+  before_action :set_group, only: %i[show edit update destroy join leave]
+  before_action -> { validate_ownership!(@group) }, only: %i[edit update destroy leave]
   before_action :validate_user_enrollment!, only: :show
 
   # GET /groups
@@ -72,6 +72,19 @@ class GroupsController < ApplicationController
     GroupEnrollement.create(user: current_user, group: @group)
 
     redirect_to @group, notice: I18n.t('groups.join.success')
+  end
+
+  # POST /groups/1/join
+  def leave
+    user = User.find(params[:user_id])
+
+    raise if current_user != @group.user
+
+    GroupEnrollement.find_by(user: user, group: @group).destroy
+
+    redirect_to @group, notice: I18n.t('groups.leave.success')
+  rescue StandardError
+    redirect_to @group, notice: I18n.t('groups.leave.failed')
   end
 
   private
