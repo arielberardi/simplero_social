@@ -1,8 +1,6 @@
-<div class="mx-auto w-2/3 flex">
-  <div class="mx-auto flex flex-col">
-    <div class="mt-5">
-      <%= render 'show_group', group: @group %>
-    </div>
+<div class="flex w-full space-x-20">
+  <div class="flex-col w-3/4 mt-5">
+    <%= render 'show_group', group: @group %>
     <div class="mt-5">
       <%= render partial: 'posts/form', locals: { post: @group.posts.build } %>
     </div>
@@ -10,5 +8,8 @@
       <h1 class="title-secondary">All posts</h1>
       <%= render partial: 'posts/post', collection: @posts %>
     </div>
+  </div>
+  <div class="flex-col w-1/4 mt-5">
+    <%= render 'members', group: @group %>
   </div>
 </div>

@@ -174,4 +174,31 @@ RSpec.describe '/groups', type: :request do
       it { expect { subject }.to change(GroupEnrollement, :count).by(0) }
     end
   end
+
+  describe 'GET /leave' do
+    let(:new_user) { FactoryBot.create(:user) }
+
+    before { enroll_user_in_group(new_user, mock_group) }
+
+    subject do
+      get leave_group_url(mock_group, new_user)
+      response
+    end
+
+    it { is_expected.to redirect_to(group_url(mock_group)) }
+    it { expect { subject }.to change(GroupEnrollement, :count).by(-1) }
+
+    it 'removes join asociation with the user' do
+      subject
+      expect(new_user.joined_groups).to_not include(mock_group)
+    end
+
+    context 'when user is not the owner' do
+      let(:new_owner) { FactoryBot.create(:user) }
+      let(:mock_group) { FactoryBot.create(:group, user: new_owner) }
+
+      it { is_expected.to have_http_status(:unauthorized) }
+      it { expect { subject }.to change(GroupEnrollement, :count).by(0) }
+    end
+  end
 end
