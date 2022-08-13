@@ -5,8 +5,27 @@
       <strong class="text-bold text-lg">Group name</strong>
       <p class="text-gray-700 text-sm w-2/3">People will see this name before joining your group</p>
     </div>
-    <div class="flex flex-col w-2/3">
+    <div class="flex flex-col w-2/3 pl-20">
       <%= form.text_field :title, class: 'form-input-text', placeholder: 'My group' %>
+    </div>
+  </div>
+  <div class="flex mt-5 w-full">
+    <div class="flex flex-col w-1/3">
+      <strong class="text-bold text-lg">Access control</strong>
+      <p class="text-gray-700 text-sm">
+        Open means anyone can join. Private means you have to accept their request. Secret means
+        that you have to invite them to join.
+      </p>
+    </div>
+    <div class="flex w-2/3 h-12 pl-20">
+      <%= form.hidden_field :privacy, value: group.privacy ? group.privacy : 'open', readonly: true %>
+      <% Group.privacies.each do |key, value| %>
+        <%= button_tag key.capitalize, class: 'form-input-radio', remote: true, data: {
+          controller: 'groups',
+          action: 'groups#setPrivacyInput',
+          groups_privacy_param: key
+        } %>
+      <% end %>
     </div>
   </div>
   <div class="flex mt-10 justify-end space-x-6 w-full">

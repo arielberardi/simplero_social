@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Group < ApplicationRecord
+  enum :privacy, %i[open restricted secret]
+
   belongs_to :user
   has_many :posts, dependent: :destroy
 
@@ -8,6 +10,7 @@ class Group < ApplicationRecord
   has_many :users, through: :group_enrollements, source: :user
 
   validates :title, presence: true, uniqueness: true, length: { minimum: 2 }
+  validates :privacy, presence: true
 
   def requests
     group_enrollements.where(joined: false).map(&:user)

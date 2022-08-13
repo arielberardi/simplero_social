@@ -114,7 +114,7 @@ class GroupsController < ApplicationController
   end
 
   def group_params
-    params.require(:group).permit(:title).merge(user: current_user)
+    params.require(:group).permit(:title, :privacy).merge(user: current_user)
   end
 
   def locale(action)
