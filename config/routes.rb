@@ -13,6 +13,8 @@ Rails.application.routes.draw do
 
   get 'groups/:id/join', to: 'groups#join', as: :join_group
   get 'groups/:id/leave/:user_id', to: 'groups#leave', as: :leave_group
+  get 'groups/:id/request', to: 'groups#request_join', as: :request_group
+  get 'groups/:id/accept/:user_id', to: 'groups#accept_join', as: :accept_group
   resources :groups do
     resources :posts, except: %i[index new edit]
   end
