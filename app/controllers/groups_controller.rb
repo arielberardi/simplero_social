@@ -2,8 +2,8 @@
 
 class GroupsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_group, only: %i[show edit update destroy join leave]
-  before_action -> { validate_ownership!(@group) }, only: %i[edit update destroy leave]
+  before_action :set_group, except: %i[index new create]
+  before_action -> { validate_ownership!(@group) }, only: %i[edit update destroy leave accept_join]
   before_action :validate_user_enrollment!, only: :show
 
   # GET /groups
@@ -30,7 +30,7 @@ class GroupsController < ApplicationController
 
     respond_to do |format|
       if @group.save
-        GroupEnrollement.create(user: current_user, group: @group)
+        GroupEnrollement.create(user: current_user, group: @group, joined: true)
 
         format.turbo_stream do
           render turbo_stream: turbo_stream.append('groups',
@@ -69,7 +69,7 @@ class GroupsController < ApplicationController
 
   # POST /groups/1/join
   def join
-    GroupEnrollement.create(user: current_user, group: @group)
+    GroupEnrollement.create(user: current_user, group: @group, joined: true)
 
     redirect_to @group, notice: I18n.t('groups.join.success')
   end
@@ -78,9 +78,29 @@ class GroupsController < ApplicationController
   def leave
     user = User.find(params[:user_id])
 
-    raise if current_user != @group.user
+    raise if current_user != @group.user || user == @group.user
 
     GroupEnrollement.find_by(user: user, group: @group).destroy
+
+    redirect_to @group, notice: I18n.t('groups.leave.success')
+  rescue StandardError
+    redirect_to @group, notice: I18n.t('groups.leave.failed')
+  end
+
+  def request_join
+    GroupEnrollement.create(user: current_user, group: @group)
+
+    redirect_to groups_url, notice: I18n.t('groups.join.success')
+  end
+
+  def accept_join
+    user = User.find(params[:user_id])
+
+    raise if current_user != @group.user || user == @group.user
+
+    enrrollement = GroupEnrollement.find_by(user: user, group: @group)
+
+    params[:accepted] == 'true' ? enrrollement.update(joined: true) : enrrollement.destroy
 
     redirect_to @group, notice: I18n.t('groups.leave.success')
   rescue StandardError
@@ -94,7 +114,7 @@ class GroupsController < ApplicationController
   end
 
   def group_params
-    params.require(:group).permit(:title).merge(user: current_user)
+    params.require(:group).permit(:title, :privacy).merge(user: current_user)
   end
 
   def locale(action)

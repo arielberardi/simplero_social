@@ -3,8 +3,6 @@
     <h1 class="font-bold text-2xl">
       <%= link_to group.title, group %>
     </h1>
-    <% unless current_owner?(group) || user_joined?(group) %>
-      <%= link_to 'Join', join_group_path(group), class: 'btn-secondary' %>
-    <% end %>
+    <%= group_actions(group) %>
   </div>
 </div>

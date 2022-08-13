@@ -43,5 +43,13 @@ RSpec.describe GroupsController, type: :routing do
     it 'routes to #leave' do
       expect(get: '/groups/1/leave/1').to route_to('groups#leave', id: '1', user_id: '1')
     end
+
+    it 'routes to #request' do
+      expect(get: '/groups/1/request').to route_to('groups#request_join', id: '1')
+    end
+
+    it 'routes to #accept' do
+      expect(get: '/groups/1/accept/1').to route_to('groups#accept_join', id: '1', user_id: '1')
+    end
   end
 end

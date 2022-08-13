@@ -1,7 +1,7 @@
 <% if current_owner?(group) %>
 <div class="flex-col">
   <h1 class="title-secondary">Members</h1>
-  <% group.users.each do |member| %>
+  <% group.members.each do |member| %>
     <div class="flex mt-5 items-center">
         <div class="w-2/3">
           <%= member.email %>

@@ -44,7 +44,18 @@ module ApplicationHelper
     false
   end
 
-  def user_joined?(group)
-    group.users.include?(current_user)
+  def group_actions(group)
+    return if current_owner?(group)
+
+    enrollement = GroupEnrollement.find_by(user: current_user, group: group)
+
+    return button_tag 'Joined', class: 'btn-primary' if enrollement&.joined == true
+    return button_tag 'Waiting for access', class: 'btn-secondary' if enrollement&.joined == false
+
+    if group.restricted?
+      link_to 'Request join', request_group_path(group), class: 'btn-secondary'
+    else
+      link_to 'Join', join_group_path(group), class: 'btn-secondary'
+    end
   end
 end

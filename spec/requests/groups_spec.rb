@@ -201,4 +201,64 @@ RSpec.describe '/groups', type: :request do
       it { expect { subject }.to change(GroupEnrollement, :count).by(0) }
     end
   end
+
+  describe 'GET /request' do
+    let(:owner_user) { FactoryBot.create(:user) }
+    let(:mock_group) { FactoryBot.create(:group, user: owner_user) }
+    let(:enroll_user) { nil }
+
+    before { enroll_user_in_group(owner_user, mock_group) }
+
+    subject do
+      get request_group_url(mock_group)
+      response
+    end
+
+    it { is_expected.to redirect_to(groups_url) }
+    it { expect { subject }.to change(GroupEnrollement, :count).by(1) }
+
+    context 'when user is the owner or is joined' do
+      let(:user) { owner_user }
+
+      it { is_expected.to redirect_to(groups_url) }
+      it { expect { subject }.to change(GroupEnrollement, :count).by(0) }
+    end
+  end
+
+  describe 'GET /accept' do
+    let(:new_user) { FactoryBot.create(:user) }
+    let(:action) { { accepted: true } }
+
+    before { enroll_user_in_group(new_user, mock_group, joined: false) }
+
+    subject do
+      get accept_group_url(mock_group, new_user), params: action
+      response
+    end
+
+    it { is_expected.to redirect_to(group_url(mock_group)) }
+    it { expect { subject }.to change(GroupEnrollement, :count).by(0) }
+    it 'changes current enrollment status' do
+      subject
+      expect(GroupEnrollement.last.joined).to eq(true)
+    end
+
+    context 'when request is rejected' do
+      let(:action) { { accepted: false } }
+
+      it { is_expected.to redirect_to(group_url(mock_group)) }
+      it { expect { subject }.to change(GroupEnrollement, :count).by(-1) }
+    end
+
+    context 'when user is not the owner' do
+      let(:new_owner) { FactoryBot.create(:user) }
+      let(:mock_group) { FactoryBot.create(:group, user: new_owner) }
+
+      it { is_expected.to have_http_status(:unauthorized) }
+      it 'does not change current enrollment status' do
+        subject
+        expect(GroupEnrollement.last.joined).to eq(false)
+      end
+    end
+  end
 end
