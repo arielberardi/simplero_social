@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Group < ApplicationRecord
-  enum :privacy, %i[open restricted secret]
+  enum :privacy, %i[open restricted]
 
   belongs_to :user
   has_many :posts, dependent: :destroy

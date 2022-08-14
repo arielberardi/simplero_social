@@ -7,3 +7,6 @@ en:
     leave:
       success: 'User was successfully removed.'
       failed: "User wasn't removed."
+  email:
+    notification:
+      subject: 'Simplero Social | New notification'
