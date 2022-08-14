@@ -68,10 +68,12 @@ class CommentsController < ApplicationController
     if @comment.reply?
       return if @comment.parent.user == current_user
 
+      owner = @comment.parent.user
       content = "#{current_user.email} replied to your comment"
     else
       return if @post.user == current_user
 
+      owner = @post.user
       content = "#{current_user.email} commented your post"
     end
 
@@ -79,6 +81,7 @@ class CommentsController < ApplicationController
                                         locals: { content: content, link: redirect_to_post },
                                         formats: [:html]
 
-    ActionCable.server.broadcast("notification:#{@post.user.id}", { html: html })
+    ActionCable.server.broadcast("notification:#{owner.id}", { html: html })
+    NotificationMailer.notify(owner, content).deliver_now
   end
 end
