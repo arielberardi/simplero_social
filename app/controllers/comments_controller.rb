@@ -12,6 +12,8 @@ class CommentsController < ApplicationController
   def create
     @comment = @post.comments.new(comment_params.merge(user: current_user))
 
+    sent_notification
+
     if @comment.save
       redirect_to redirect_to_post, notice: locale('created')
     else
@@ -60,5 +62,23 @@ class CommentsController < ApplicationController
 
   def locale(action)
     I18n.t('notice.success', action: action, resource: 'Comment')
+  end
+
+  def sent_notification
+    if @comment.reply?
+      return if @comment.parent.user == current_user
+
+      content = "#{current_user.email} replied to your comment"
+    else
+      return if @post.user == current_user
+
+      content = "#{current_user.email} commented your post"
+    end
+
+    html = ApplicationController.render partial: 'layouts/notification',
+                                        locals: { content: content, link: redirect_to_post },
+                                        formats: [:html]
+
+    ActionCable.server.broadcast("notification:#{@post.user.id}", { html: html })
   end
 end

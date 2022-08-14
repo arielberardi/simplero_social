@@ -11,4 +11,8 @@ class Comment < ApplicationRecord
   validates :content, presence: true
 
   scope :parents, -> { where(parent_id: nil) }
+
+  def reply?
+    !parent.nil?
+  end
 end
