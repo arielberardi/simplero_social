@@ -14,6 +14,10 @@ class User < ApplicationRecord
   has_many :joined_groups, through: :group_enrollements, source: :group
 
   def name
-    "#{first_name.first.capitalize}. #{last_name}"
+    "#{first_name} #{last_name.first.capitalize}."
+  end
+
+  def full_name
+    "#{first_name} #{last_name}"
   end
 end

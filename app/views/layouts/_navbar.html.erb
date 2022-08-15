@@ -1,5 +1,10 @@
 <nav class="bg-white border-gray-200 px-2 py-2.5">
-  <div class="container flex justify-end mx-auto">
+  <div class="container flex items-center justify-between mx-auto">
+    <div class="flex">
+      <% if current_user %>
+        User: <%= current_user.full_name %>
+      <% end %>
+    </div>
     <ul class="flex space-x-6">
       <li><%= link_to 'Groups', groups_url, class: 'hover:text-gray-700 hover:underline' %></li>
       <% if current_user %>

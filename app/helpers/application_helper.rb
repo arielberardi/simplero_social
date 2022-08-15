@@ -1,24 +1,20 @@
 # frozen_string_literal: true
 
 module ApplicationHelper
-  def time_from_last_update(comment)
-    return nil if comment.nil?
+  def comment_last_update(comment)
+    return if comment.nil?
 
-    if comment.updated_at - comment.created_at < 1
-      "Commented #{time_ago_in_words(comment.created_at)} ago"
-    else
-      "Updated #{time_ago_in_words(comment.updated_at)} ago"
-    end
+    user_name = current_user == comment.user ? 'You' : comment.user.name
+    action = comment.parent ? 'replied' : 'commented'
+
+    "#{user_name} #{action} #{time_ago_in_words(comment.created_at)} ago ."
   end
 
-  def time_from_last_comment(post)
-    return nil if post.nil?
+  def post_last_update(post)
+    return if post.nil?
+    return if post.comments.empty?
 
-    if post.updated_at - post.created_at < 1
-      "Commented #{time_ago_in_words(post.created_at)} ago"
-    else
-      "Updated #{time_ago_in_words(post.updated_at)} ago"
-    end
+    "Last comment #{time_ago_in_words(post.comments.last.created_at)} ago ."
   end
 
   def form_submit_name(action_name)
