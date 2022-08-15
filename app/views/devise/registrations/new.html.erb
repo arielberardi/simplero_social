@@ -3,6 +3,8 @@
     <h2 class="title-primary text-center">Sign up</h2>
     <%= form_for(resource, as: resource_name, url: user_registration_path, data: { turbo: false }) do |f| %>
         <%= f.email_field :email, autofocus: true, autocomplete: 'email', placeholder: 'Email', class: 'form-input-text' %>
+        <%= f.text_field :first_name, placeholder: 'First name', class: 'form-input-text' %>
+        <%= f.text_field :last_name, placeholder: 'Last name', class: 'form-input-text' %>
         <%= f.password_field :password, autocomplete: 'current-password', placeholder: 'Password', class: 'form-input-text' %>
         <%= f.password_field :password_confirmation, autocomplete: "new-password", placeholder: 'Confirm Password', class: 'form-input-text' %>
         <%= f.submit 'Sign up', class: 'btn-primary w-full mt-5' %>
