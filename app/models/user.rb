@@ -12,4 +12,8 @@ class User < ApplicationRecord
 
   has_many :group_enrollements, dependent: :destroy
   has_many :joined_groups, through: :group_enrollements, source: :group
+
+  def name
+    "#{first_name.first.capitalize}. #{last_name}"
+  end
 end
