@@ -69,7 +69,7 @@ RSpec.describe '/groups', type: :request do
       let(:owner_user) { FactoryBot.create(:user) }
       let(:mock_group) { FactoryBot.create(:group, user: owner_user) }
 
-      it { is_expected.to have_http_status(:unauthorized) }
+      it { is_expected.to redirect_to(groups_url) }
     end
   end
 
@@ -125,7 +125,7 @@ RSpec.describe '/groups', type: :request do
       let(:owner_user) { FactoryBot.create(:user) }
       let(:mock_group) { FactoryBot.create(:group, user: owner_user) }
 
-      it { is_expected.to have_http_status(:unauthorized) }
+      it { is_expected.to redirect_to(groups_url) }
     end
   end
 
@@ -148,7 +148,7 @@ RSpec.describe '/groups', type: :request do
       let(:owner_user) { FactoryBot.create(:user) }
       let(:mock_group) { FactoryBot.create(:group, user: owner_user) }
 
-      it { is_expected.to have_http_status(:unauthorized) }
+      it { is_expected.to redirect_to(groups_url) }
     end
   end
 
@@ -197,7 +197,7 @@ RSpec.describe '/groups', type: :request do
       let(:new_owner) { FactoryBot.create(:user) }
       let(:mock_group) { FactoryBot.create(:group, user: new_owner) }
 
-      it { is_expected.to have_http_status(:unauthorized) }
+      it { is_expected.to redirect_to(groups_url) }
       it { expect { subject }.to change(GroupEnrollement, :count).by(0) }
     end
   end
@@ -254,7 +254,7 @@ RSpec.describe '/groups', type: :request do
       let(:new_owner) { FactoryBot.create(:user) }
       let(:mock_group) { FactoryBot.create(:group, user: new_owner) }
 
-      it { is_expected.to have_http_status(:unauthorized) }
+      it { is_expected.to redirect_to(groups_url) }
       it 'does not change current enrollment status' do
         subject
         expect(GroupEnrollement.last.joined).to eq(false)

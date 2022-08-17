@@ -79,7 +79,7 @@ RSpec.describe '/comments', type: :request do
       let(:owner_user) { FactoryBot.create(:user) }
       let(:comment) { FactoryBot.create(:comment, post: mock_post, user: owner_user) }
 
-      it { is_expected.to have_http_status(:unauthorized) }
+      it { is_expected.to redirect_to(groups_url) }
 
       context 'and is the owner of the group' do
         let(:group) { FactoryBot.create(:group, user: user) }
@@ -109,7 +109,7 @@ RSpec.describe '/comments', type: :request do
       let(:owner_user) { FactoryBot.create(:user) }
       let(:comment) { FactoryBot.create(:comment, post: mock_post, user: owner_user) }
 
-      it { is_expected.to have_http_status(:unauthorized) }
+      it { is_expected.to redirect_to(groups_url) }
 
       context 'and is the owner of the group' do
         let(:group) { FactoryBot.create(:group, user: user) }

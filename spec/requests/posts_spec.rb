@@ -91,7 +91,7 @@ RSpec.describe '/posts', type: :request do
       let(:owner_user) { FactoryBot.create(:user) }
       let(:mock_post) { FactoryBot.create(:post, group: group, user: owner_user) }
 
-      it { is_expected.to have_http_status(:unauthorized) }
+      it { is_expected.to redirect_to(groups_url) }
 
       context 'and is the owner of the group' do
         let(:group) { FactoryBot.create(:group, user: user) }
@@ -125,7 +125,7 @@ RSpec.describe '/posts', type: :request do
       let(:owner_user) { FactoryBot.create(:user) }
       let(:mock_post) { FactoryBot.create(:post, group: group, user: owner_user) }
 
-      it { is_expected.to have_http_status(:unauthorized) }
+      it { is_expected.to redirect_to(groups_url) }
 
       context 'and is the owner of the group' do
         let(:group) { FactoryBot.create(:group, user: user) }

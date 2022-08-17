@@ -3,28 +3,23 @@
 class GroupsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_group, except: %i[index new create]
-  before_action -> { validate_ownership!(@group) }, only: %i[edit update destroy leave accept_join]
+  before_action :validate_group_ownership!, only: %i[edit update destroy leave accept_join]
   before_action :validate_user_enrollment!, only: :show
 
-  # GET /groups
   def index
     @groups = Group.all
   end
 
-  # GET /groups/1
   def show
     @posts = @group.posts.all
   end
 
-  # GET /groups/new
   def new
     @group = Group.new
   end
 
-  # GET /groups/1/edit
   def edit; end
 
-  # POST /groups
   def create
     @group = Group.new(group_params)
 
@@ -44,7 +39,6 @@ class GroupsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /groups/1
   def update
     respond_to do |format|
       if @group.update(group_params)
@@ -60,24 +54,20 @@ class GroupsController < ApplicationController
     end
   end
 
-  # DELETE /groups/1
   def destroy
     @group.destroy
 
     redirect_to groups_url, notice: locale('destroyed')
   end
 
-  # POST /groups/1/join
   def join
     GroupEnrollement.create(user: current_user, group: @group, joined: true)
 
     redirect_to @group, notice: I18n.t('groups.join.success')
   end
 
-  # POST /groups/1/join
   def leave
     user = User.find(params[:user_id])
-
     raise if current_user != @group.user || user == @group.user
 
     GroupEnrollement.find_by(user: user, group: @group).destroy
@@ -95,7 +85,6 @@ class GroupsController < ApplicationController
 
   def accept_join
     user = User.find(params[:user_id])
-
     raise if current_user != @group.user || user == @group.user
 
     enrrollement = GroupEnrollement.find_by(user: user, group: @group)
@@ -115,6 +104,10 @@ class GroupsController < ApplicationController
 
   def group_params
     params.require(:group).permit(:title, :privacy).merge(user: current_user)
+  end
+
+  def validate_group_ownership!
+    validate_ownership!(@group)
   end
 
   def locale(action)
