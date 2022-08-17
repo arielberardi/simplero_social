@@ -7,5 +7,5 @@ test:
 
 production:
   adapter: redis
-  url: <%= Rails.application.credentials.redis %>
+  url: <%= ENV['REDIS_URL'] %>
   channel_prefix: simplero_social_production
