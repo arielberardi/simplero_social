@@ -9,25 +9,10 @@
     <p>
       <%= comment_last_update(comment) %>
       <% if can_edit_or_delete?(comment) %>
-        <%= button_tag 'Edit',
-            data: {
-              controller: 'comments',
-              action: 'comments#toggleForm',
-              comments_id_param: comment.id,
-            }
-        %> .
-        <%= link_to 'Delete',
-            [comment.post, comment],
-            data: { 'turbo-method': :delete, 'turbo-confirm': 'Are you sure?' }
-        %> .
+        <%= button_tag 'Edit', data: { controller: 'comments', action: 'comments#toggleForm', comments_id_param: comment.id } %> .
+        <%= link_to 'Delete', [comment.post, comment], data: { 'turbo-method': :delete, 'turbo-confirm': 'Are you sure?' } %> .
       <% end %>
-      <%= button_tag 'Reply',
-          data: {
-            controller: 'comments',
-            action: 'comments#toggleReplyForm',
-            comments_id_param: comment.id,
-          }
-      %>
+      <%= button_tag 'Reply', data: { controller: 'comments', action: 'comments#toggleReplyForm', comments_id_param: comment.id } %>
     </p>
   </div>
   <div id="reply-form-<%= comment.id %>" class="hidden">

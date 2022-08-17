@@ -4,15 +4,13 @@ class PostsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_group
   before_action :set_post, only: %i[show update destroy]
-  before_action -> { validate_ownership!(@post) }, only: %i[update destroy]
+  before_action :validate_post_ownership!, only: %i[update destroy]
   before_action :validate_user_enrollment!, only: :show
 
-  # GET /posts/1
   def show
     @comments = @post.comments.parents
   end
 
-  # POST /posts
   def create
     @post = @group.posts.new(post_params.merge(user: current_user))
 
@@ -23,7 +21,6 @@ class PostsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /posts/1
   def update
     if @post.update(post_params)
       redirect_to group_url(@group), notice: locale('updated')
@@ -32,7 +29,6 @@ class PostsController < ApplicationController
     end
   end
 
-  # DELETE /posts/1
   def destroy
     @post.destroy
 
@@ -52,6 +48,10 @@ class PostsController < ApplicationController
 
   def post_params
     params.require(:post).permit(:title, :content)
+  end
+
+  def validate_post_ownership!
+    validate_ownership!(@post)
   end
 
   def locale(action)
