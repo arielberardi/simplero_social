@@ -12,10 +12,10 @@ module GroupsHelper
   def group_actions(group)
     return if current_owner?(group)
 
-    enrollement = GroupEnrollement.find_by(user: current_user, group: group)
+    enrollment = GroupEnrollment.find_by(user: current_user, group: group)
 
-    return button_tag 'Joined', class: 'btn-primary' if enrollement&.joined == true
-    return button_tag 'Waiting for access', class: 'btn-secondary' if enrollement&.joined == false
+    return button_tag 'Joined', class: 'btn-primary' if enrollment&.joined == true
+    return button_tag 'Waiting for access', class: 'btn-secondary' if enrollment&.joined == false
 
     if group.restricted?
       link_to 'Request join', request_group_path(group), class: 'btn-secondary'

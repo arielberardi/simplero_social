@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Validations
   def validate_ownership!(object)
     return if object.is_a?(Comment) && object.post.group.user == current_user

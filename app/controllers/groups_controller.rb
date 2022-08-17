@@ -25,7 +25,7 @@ class GroupsController < ApplicationController
 
     respond_to do |format|
       if @group.save
-        GroupEnrollement.create(user: current_user, group: @group, joined: true)
+        GroupEnrollment.create(user: current_user, group: @group, joined: true)
 
         format.turbo_stream do
           render turbo_stream: turbo_stream.append('groups',
@@ -61,7 +61,7 @@ class GroupsController < ApplicationController
   end
 
   def join
-    GroupEnrollement.create(user: current_user, group: @group, joined: true)
+    GroupEnrollment.create(user: current_user, group: @group, joined: true)
 
     redirect_to @group, notice: I18n.t('groups.join.success')
   end
@@ -70,7 +70,7 @@ class GroupsController < ApplicationController
     user = User.find(params[:user_id])
     raise if current_user != @group.user || user == @group.user
 
-    GroupEnrollement.find_by(user: user, group: @group).destroy
+    GroupEnrollment.find_by(user: user, group: @group).destroy
 
     redirect_to @group, notice: I18n.t('groups.leave.success')
   rescue StandardError
@@ -78,7 +78,7 @@ class GroupsController < ApplicationController
   end
 
   def request_join
-    GroupEnrollement.create(user: current_user, group: @group)
+    GroupEnrollment.create(user: current_user, group: @group)
 
     redirect_to groups_url, notice: I18n.t('groups.join.success')
   end
@@ -87,7 +87,7 @@ class GroupsController < ApplicationController
     user = User.find(params[:user_id])
     raise if current_user != @group.user || user == @group.user
 
-    enrrollement = GroupEnrollement.find_by(user: user, group: @group)
+    enrrollement = GroupEnrollment.find_by(user: user, group: @group)
 
     params[:accepted] == 'true' ? enrrollement.update(joined: true) : enrrollement.destroy
 

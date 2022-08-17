@@ -8,8 +8,8 @@ class User < ApplicationRecord
   has_many :posts, dependent: :destroy
   has_many :comments, dependent: :destroy
 
-  has_many :group_enrollements, dependent: :destroy
-  has_many :joined_groups, through: :group_enrollements, source: :group
+  has_many :group_enrollments, dependent: :destroy
+  has_many :joined_groups, through: :group_enrollments, source: :group
 
   def name
     "#{first_name} #{last_name.first.capitalize}."

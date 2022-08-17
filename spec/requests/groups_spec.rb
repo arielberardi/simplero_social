@@ -165,13 +165,13 @@ RSpec.describe '/groups', type: :request do
     end
 
     it { is_expected.to redirect_to(group_url(mock_group)) }
-    it { expect { subject }.to change(GroupEnrollement, :count).by(1) }
+    it { expect { subject }.to change(GroupEnrollment, :count).by(1) }
 
     context 'when user is the owner or is joined' do
       let(:user) { owner_user }
 
       it { is_expected.to redirect_to(group_url(mock_group)) }
-      it { expect { subject }.to change(GroupEnrollement, :count).by(0) }
+      it { expect { subject }.to change(GroupEnrollment, :count).by(0) }
     end
   end
 
@@ -186,7 +186,7 @@ RSpec.describe '/groups', type: :request do
     end
 
     it { is_expected.to redirect_to(group_url(mock_group)) }
-    it { expect { subject }.to change(GroupEnrollement, :count).by(-1) }
+    it { expect { subject }.to change(GroupEnrollment, :count).by(-1) }
 
     it 'removes join asociation with the user' do
       subject
@@ -198,7 +198,7 @@ RSpec.describe '/groups', type: :request do
       let(:mock_group) { FactoryBot.create(:group, user: new_owner) }
 
       it { is_expected.to redirect_to(groups_url) }
-      it { expect { subject }.to change(GroupEnrollement, :count).by(0) }
+      it { expect { subject }.to change(GroupEnrollment, :count).by(0) }
     end
   end
 
@@ -215,13 +215,13 @@ RSpec.describe '/groups', type: :request do
     end
 
     it { is_expected.to redirect_to(groups_url) }
-    it { expect { subject }.to change(GroupEnrollement, :count).by(1) }
+    it { expect { subject }.to change(GroupEnrollment, :count).by(1) }
 
     context 'when user is the owner or is joined' do
       let(:user) { owner_user }
 
       it { is_expected.to redirect_to(groups_url) }
-      it { expect { subject }.to change(GroupEnrollement, :count).by(0) }
+      it { expect { subject }.to change(GroupEnrollment, :count).by(0) }
     end
   end
 
@@ -237,17 +237,17 @@ RSpec.describe '/groups', type: :request do
     end
 
     it { is_expected.to redirect_to(group_url(mock_group)) }
-    it { expect { subject }.to change(GroupEnrollement, :count).by(0) }
+    it { expect { subject }.to change(GroupEnrollment, :count).by(0) }
     it 'changes current enrollment status' do
       subject
-      expect(GroupEnrollement.last.joined).to eq(true)
+      expect(GroupEnrollment.last.joined).to eq(true)
     end
 
     context 'when request is rejected' do
       let(:action) { { accepted: false } }
 
       it { is_expected.to redirect_to(group_url(mock_group)) }
-      it { expect { subject }.to change(GroupEnrollement, :count).by(-1) }
+      it { expect { subject }.to change(GroupEnrollment, :count).by(-1) }
     end
 
     context 'when user is not the owner' do
@@ -257,7 +257,7 @@ RSpec.describe '/groups', type: :request do
       it { is_expected.to redirect_to(groups_url) }
       it 'does not change current enrollment status' do
         subject
-        expect(GroupEnrollement.last.joined).to eq(false)
+        expect(GroupEnrollment.last.joined).to eq(false)
       end
     end
   end
