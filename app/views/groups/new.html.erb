@@ -1,6 +1,7 @@
 <%= turbo_frame_tag :groups_form_modal do %>
-  <%= tag.div data: { controller: 'turbo-modal', turbo_modal_target: 'modal', class: 'groups-modal',
-                      action: "turbo:submit-end->turbo-modal#submitEnd keyup@window->turbo-modal#closeWithKeyboard click@window->turbo-modal#closeWithClick" } do %>
+  <%= tag.div data: { controller: 'turbo-modal', turbo_modal_target: 'modal',
+                      action: "turbo:submit-end->turbo-modal#submitEnd keyup@window->turbo-modal#closeWithKeyboard click@window->turbo-modal#closeWithClick" },
+                      class: 'groups-modal' do %>
     <%= render 'form', group: @group %>
   <% end %>
 <% end %>
