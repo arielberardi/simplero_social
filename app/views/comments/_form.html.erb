@@ -1,9 +1,6 @@
 <%= form_with(model: [comment.post, comment], class: 'contents', namespace: "comment_#{comment.id}") do |form| %>
   <div class="my-5">
-    <%= form.rich_text_area :content,
-        class: 'form-input-text',
-        placeholder: 'You can type @ to mention someone'
-    %>
+    <%= form.rich_text_area :content, class: 'form-input-text', placeholder: 'You can type @ to mention someone' %>
   </div>
   <div class="flex flex-col items-end">
     <%= form.submit 'Comment', class: 'btn-primary' %>

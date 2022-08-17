@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>SimpleroSocial</title>
+    <title>Simplero Social</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -12,8 +12,7 @@
   <body class="bg-gray-100">
     <%= render 'layouts/navbar' %>
     <main class="container relative mx-auto mt-5 px-5 flex">
-      <div id="notifications" class="absolute top-0 right-0 flex-col">
-      </div>
+      <div id="notifications" class="absolute top-0 right-0 flex-col"></div>
       <%= turbo_frame_tag :groups_form_modal %>
       <%= yield %>
     </main>

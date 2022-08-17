@@ -11,17 +11,8 @@
       <p>
         <%= post_last_update(post) %>
         <% if can_edit_or_delete?(post) %>
-          <%= link_to 'Edit', nil,
-              data: {
-                controller: 'posts',
-                action: 'posts#toggleForm',
-                posts_id_param: post.id,
-              }
-          %> .
-          <%= link_to 'Delete',
-              [post.group, post],
-              data: { 'turbo-method': :delete, 'turbo-confirm': 'Are you sure?' }
-          %> .
+          <%= link_to 'Edit', nil, data: { controller: 'posts', action: 'posts#toggleForm', posts_id_param: post.id } %> .
+          <%= link_to 'Delete', [post.group, post], data: { 'turbo-method': :delete, 'turbo-confirm': 'Are you sure?' } %> .
         <% end %>
         Created by <%= current_user == post.user ? 'You' : post.user.name %>
       </p>

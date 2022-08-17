@@ -20,20 +20,12 @@
     <div class="flex w-2/3 h-12 pl-20">
       <%= form.hidden_field :privacy, value: group.privacy ? group.privacy : 'open', readonly: true %>
       <% Group.privacies.each do |key, value| %>
-        <%= button_tag key.capitalize, class: 'form-input-radio', remote: true, data: {
-          controller: 'groups',
-          action: 'groups#setPrivacyInput',
-          groups_privacy_param: key
-        } %>
+        <%= button_tag key.capitalize, class: 'form-input-radio', remote: true, data: { controller: 'groups', action: 'groups#setPrivacyInput', groups_privacy_param: key } %>
       <% end %>
     </div>
   </div>
   <div class="flex mt-10 justify-end space-x-6 w-full">
-    <%= button_tag 'Close',
-        type: 'button',
-        class: 'btn-secondary',
-        data: { action: 'turbo-modal#hideModal' }
-      %>
+    <%= button_tag 'Close', type: 'button', class: 'btn-secondary', data: { action: 'turbo-modal#hideModal' } %>
     <%= form.submit group_form_submit_name(action_name), class: 'btn-primary' %>
   </div>
 <% end %>
