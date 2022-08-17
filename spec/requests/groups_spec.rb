@@ -4,11 +4,13 @@ require 'rails_helper'
 
 RSpec.describe '/groups', type: :request do
   let(:user) { FactoryBot.create(:user) }
+
   let(:mock_group) { FactoryBot.create(:group, user: user) }
-  let(:mock_post) { FactoryBot.create(:post, group: mock_group) }
   let(:valid_attributes) { FactoryBot.attributes_for(:group) }
   let(:invalid_attributes) { FactoryBot.attributes_for(:group, title: '') }
   let(:enroll_user) { enroll_user_in_group(user, mock_group) }
+
+  let(:mock_post) { FactoryBot.create(:post, group: mock_group) }
 
   before do
     sign_in user

@@ -4,6 +4,7 @@ require 'rails_helper'
 
 RSpec.describe '/comments', type: :request do
   let(:user) { FactoryBot.create(:user) }
+
   let(:group) { FactoryBot.create(:group) }
   let(:group_id) { group.id }
   let(:enroll_user) { enroll_user_in_group(user, group) }
