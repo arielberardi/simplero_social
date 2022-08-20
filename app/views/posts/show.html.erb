@@ -4,7 +4,7 @@
     <p class="text-xl mt-10"><%= @post.content %></p>
     <h1 class="title-secondary">Comments</h1>
     <div class="mt-5">
-      <%= render partial: 'comments/comment', collection: @comments %>
+      <%= render(CommentComponent.with_collection(@post.comments, current_user: current_user)) %>
     </div>
     <div class="mt-10">
       <%= render partial: 'comments/form', locals: { comment: @post.comments.build } %>

@@ -24,3 +24,6 @@ Rails/InverseOf:
 
 Rails/NotNullColumn:
   Enabled: false
+
+Lint/MissingSuper:
+  Enabled: false

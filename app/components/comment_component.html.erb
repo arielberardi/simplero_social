@@ -1,0 +1,26 @@
+<div id="comment-show-<%= @comment.id %>" class="flex flex-col align-start">
+  <div id="comment-body-<%= @comment.id %>">
+    <p class="mt-2"><%= @comment.content %></p>
+  </div>
+  <div id="comment-form-<%= @comment.id %>" class="hidden">
+    <%= render partial: 'comments/form', locals: { comment: @comment } %>
+  </div>
+  <div id="comment-footer-<%= @comment.id %>" class="mt-2 font-medium italic text-gray-500">
+    <p>
+      <%= @last_update %>
+      <% if @current_owner %>
+        <%= button_tag 'Edit', data: { controller: 'comments', action: 'comments#toggleForm', comments_id_param: @comment.id } %> .
+        <%= link_to 'Delete', [@comment.post, @comment], data: { 'turbo-method': :delete, 'turbo-confirm': 'Are you sure?' } %> .
+      <% end %>
+      <%= button_tag 'Reply', data: { controller: 'comments', action: 'comments#toggleReplyForm', comments_id_param: @comment.id } %>
+    </p>
+  </div>
+  <div id="reply-form-<%= @comment.id %>" class="hidden">
+    <%= render partial: 'comments/reply', locals: { comment: @comment } %>
+  </div>
+  <div class="flex-col ml-10">
+    <% if @comment.replies.any? %>
+      <%= render(CommentComponent.with_collection(@comment.replies, current_user: @current_user)) %>
+    <% end %>
+  </div>
+</div>

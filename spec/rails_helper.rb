@@ -22,6 +22,8 @@ require 'rspec/rails'
 # directory. Alternatively, in the individual `*_spec.rb` files, manually
 # require only the support files necessary.
 #
+require 'view_component/test_helpers'
+require 'capybara/rails'
 Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require_relative f }
 
 # Checks for pending migrations and applies them before tests are run.
@@ -68,6 +70,15 @@ RSpec.configure do |config|
   config.include Devise::Test::IntegrationHelpers
   # config.include Devise::Test::ControllerHelpers, type: :controller
   # config.include Devise::Test::ControllerHelpers, type: :view
+
+  config.include ViewComponent::TestHelpers, type: :component
+  config.include Capybara::RSpecMatchers, type: :component
+
+  config.before(:each, type: :component) do
+    @request = controller.request
+  end
+
+  config.include ActionView::Helpers::DateHelper, type: :component
 end
 Shoulda::Matchers.configure do |config|
   config.integrate do |with|
